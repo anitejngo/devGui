@@ -25,8 +25,8 @@ class GUI:
         self.master.geometry('800x480')
         self.master.attributes("-fullscreen", True)
 
-        self.label = Label(master, text="Duzina:", width=10, font=("Courier", 20))
-        self.input_label = Label(master, text="0", width=35, font=("Courier", 20))
+        self.label = Label(master, text="Duzina:", font=("Courier", 20))
+        self.input_label = Label(master, text="0", font=("Courier", 20))
 
         self.start_button = Button(master, text="Start", command=self.start, width=10)
         self.clear_button = Button(master, text="Obrisi", command=self.clear, width=10)
