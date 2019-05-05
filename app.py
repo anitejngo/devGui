@@ -1,61 +1,101 @@
-from tkinter import Tk, Label, Button, Entry, Text, Scrollbar, RIGHT, Y, END
+from tkinter import Tk, Label, Button, Text
 from serial import *
-import numbers
+import sys
 
-serialPort = "/dev/ttyUSB0"
-#serialPort = "/dev/cu.usbserial-A600IP7D"
-baudRate = 9600
-ser = Serial(serialPort, baudRate, timeout=0, writeTimeout=0)
-serBuffer = ""
+serialPort = ""
+try:
+    serialPort = "/dev/ttyUSB0"
+    baudRate = 9600
+    ser = Serial(serialPort, baudRate, timeout=0, writeTimeout=0)
+    serBuffer = ""
+except:
+    try:
+        serialPort = "/dev/cu.usbserial-A600IP7D"
+        baudRate = 9600
+        ser = Serial(serialPort, baudRate, timeout=0, writeTimeout=0)
+        serBuffer = ""
+    except:
+        print("faild to find arduino")
+        sys.exit()
 
 
 class GUI:
     def __init__(self, master):
         self.master = master
-        pad = 3
-        self._geom = '200x200+0+0'
-        master.geometry("{0}x{1}+0+0".format(
-            master.winfo_screenwidth() - pad, master.winfo_screenheight() - pad))
-        master.bind('<Escape>', self.toggle_geom)
+        self.master.geometry('800x480')
 
-        self.label = Label(master, text="Duzina:")
-        self.input = Entry(root)
+        self.label = Label(master, text="Duzina:", width=10)
+        # self.input = Entry(root, width=35)
+        self.input_label = Label(master, text="0", width=35)
 
-        self.start_button = Button(master, text="Start", command=self.start)
-        self.clear_button = Button(master, text="Obrisi", command=self.clear)
+        self.start_button = Button(master, text="Start", command=self.start, width=10)
+        self.clear_button = Button(master, text="Obrisi", command=self.clear, width=10)
 
-        scrollbar = Scrollbar(root)
-        scrollbar.pack(side=RIGHT, fill=Y)
-        self.log = Text(root, width=60, height=10, borderwidth=2, relief="groove")
-        self.log.config(yscrollcommand=scrollbar.set)
-        scrollbar.config(command=self.log.yview)
+        self.one_button = Button(master, text="1", command=lambda: self.button_press(1), width=10)
+        self.two_button = Button(master, text="2", command=lambda: self.button_press(2), width=10)
+        self.three_button = Button(master, text="3", command=lambda: self.button_press(3), width=10)
 
-        self.close_button = Button(master, text="Izlaz", command=master.quit)
+        self.four_button = Button(master, text="4", command=lambda: self.button_press(4), width=10)
+        self.five_button = Button(master, text="5", command=lambda: self.button_press(5), width=10)
+        self.six_button = Button(master, text="6", command=lambda: self.button_press(6), width=10)
 
-        self.label.pack()
-        self.input.pack()
-        self.input.focus_set()
-        self.start_button.pack()
-        self.clear_button.pack()
-        self.log.pack()
-        self.close_button.pack()
+        self.seven_button = Button(master, text="7", command=lambda: self.button_press(7), width=10)
+        self.eight_button = Button(master, text="8", command=lambda: self.button_press(8), width=10)
+        self.nine_button = Button(master, text="9", command=lambda: self.button_press(9), width=10)
+
+        self.del_button = Button(master, text="<", command=self.delete, width=10)
+        self.zero_button = Button(master, text="0", command=lambda: self.button_press(0), width=10)
+        self.clear_button = Button(master, text="Clear", command=self.clear, width=10)
+
+        self.log = Text(root, width=90, height=10, borderwidth=2, relief="groove")
+
+        self.label.grid(row=1, column=1, pady=(50, 0))
+        self.input_label.grid(row=1, column=2, pady=(50, 0))
+
+        self.one_button.grid(row=2, column=1, padx=(50, 10), pady=(20, 20))
+        self.two_button.grid(row=2, column=2, padx=(50, 10), pady=(20, 20))
+        self.three_button.grid(row=2, column=3, padx=(50, 10), pady=(20, 20))
+
+        self.four_button.grid(row=3, column=1, padx=(50, 10), pady=(20, 20))
+        self.five_button.grid(row=3, column=2, padx=(50, 10), pady=(20, 20))
+        self.six_button.grid(row=3, column=3, padx=(50, 10), pady=(20, 20))
+
+        self.seven_button.grid(row=4, column=1, padx=(50, 10), pady=(20, 20))
+        self.eight_button.grid(row=4, column=2, padx=(50, 10), pady=(20, 20))
+        self.nine_button.grid(row=4, column=3, padx=(50, 10), pady=(20, 20))
+
+        self.del_button.grid(row=5, column=1, padx=(50, 10), pady=(20, 20))
+        self.zero_button.grid(row=5, column=2, padx=(50, 10), pady=(20, 20))
+        self.clear_button.grid(row=5, column=3, padx=(50, 10), pady=(20, 20))
+
+        self.start_button.grid(row=6, column=2, padx=(50, 10), pady=(20, 20))
+        self.log.grid(row=7, column=1, columnspan=3, padx=(50, 10))
+
         root.after(500, self.read_serial)
 
-    def toggle_geom(self, event):
-        geom = self.master.winfo_geometry()
-        self.master.geometry(self._geom)
-        self._geom = geom
-
     def start(self):
-        value = self.input.get()
-        if isinstance(int(value), numbers.Number):
+        value = self.input_label.cget("text")
+        if int(value) > -1:
             command = "MC " + value + "\r"
             ser.write(command.encode())
         else:
-            print("not valid input")
+            self.log.insert('0.0', "Not valid input")
 
     def clear(self):
-        self.input.delete(0, END)
+        self.input_label.config(text="0")
+
+    def delete(self):
+        current_value = self.input_label.cget("text")
+        if current_value != '0' and len(current_value) > 1:
+            self.input_label.config(text=current_value[:-1])
+        else:
+            self.input_label.config(text="0")
+
+    def button_press(self, value):
+        current_value = self.input_label.cget("text")
+        if current_value == '0':
+            current_value = ""
+        self.input_label.config(text=current_value + str(value))
 
     def read_serial(self):
         while True:
