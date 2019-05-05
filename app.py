@@ -23,6 +23,7 @@ class GUI:
     def __init__(self, master):
         self.master = master
         self.master.geometry('800x480')
+        self.master.attributes("-fullscreen", True)
 
         self.label = Label(master, text="Duzina:", width=10)
         # self.input = Entry(root, width=35)
