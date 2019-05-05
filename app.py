@@ -2,7 +2,8 @@ from tkinter import Tk, Label, Button, Entry, Text, Scrollbar, RIGHT, Y, END
 from serial import *
 import numbers
 
-serialPort = "/dev/cu.usbserial-A600IP7D"
+serialPort = "/dev/ttyUSB0"
+#serialPort = "/dev/cu.usbserial-A600IP7D"
 baudRate = 9600
 ser = Serial(serialPort, baudRate, timeout=0, writeTimeout=0)
 serBuffer = ""
