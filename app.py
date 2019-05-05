@@ -49,26 +49,26 @@ class GUI:
 
         self.log = Text(root, width=90, height=10, borderwidth=2, relief="groove")
 
-        self.label.grid(row=1, column=1, pady=(50, 0))
-        self.input_label.grid(row=1, column=2, pady=(50, 0))
+        self.label.grid(row=1, column=1, pady=(5, 0))
+        self.input_label.grid(row=1, column=2, pady=(5, 0))
 
-        self.one_button.grid(row=2, column=1, padx=(50, 10), pady=(20, 20))
-        self.two_button.grid(row=2, column=2, padx=(50, 10), pady=(20, 20))
-        self.three_button.grid(row=2, column=3, padx=(50, 10), pady=(20, 20))
+        self.one_button.grid(row=2, column=1, padx=(10, 10), pady=(20, 20))
+        self.two_button.grid(row=2, column=2, padx=(10, 10), pady=(20, 20))
+        self.three_button.grid(row=2, column=3, padx=(10, 10), pady=(20, 20))
 
-        self.four_button.grid(row=3, column=1, padx=(50, 10), pady=(20, 20))
-        self.five_button.grid(row=3, column=2, padx=(50, 10), pady=(20, 20))
-        self.six_button.grid(row=3, column=3, padx=(50, 10), pady=(20, 20))
+        self.four_button.grid(row=3, column=1, padx=(10, 10), pady=(20, 20))
+        self.five_button.grid(row=3, column=2, padx=(10, 10), pady=(20, 20))
+        self.six_button.grid(row=3, column=3, padx=(10, 10), pady=(20, 20))
 
-        self.seven_button.grid(row=4, column=1, padx=(50, 10), pady=(20, 20))
-        self.eight_button.grid(row=4, column=2, padx=(50, 10), pady=(20, 20))
-        self.nine_button.grid(row=4, column=3, padx=(50, 10), pady=(20, 20))
+        self.seven_button.grid(row=4, column=1, padx=(10, 10), pady=(20, 20))
+        self.eight_button.grid(row=4, column=2, padx=(10, 10), pady=(20, 20))
+        self.nine_button.grid(row=4, column=3, padx=(10, 10), pady=(20, 20))
 
-        self.del_button.grid(row=5, column=1, padx=(50, 10), pady=(20, 20))
-        self.zero_button.grid(row=5, column=2, padx=(50, 10), pady=(20, 20))
-        self.clear_button.grid(row=5, column=3, padx=(50, 10), pady=(20, 20))
+        self.del_button.grid(row=5, column=1, padx=(10, 10), pady=(20, 20))
+        self.zero_button.grid(row=5, column=2, padx=(10, 10), pady=(20, 20))
+        self.clear_button.grid(row=5, column=3, padx=(10, 10), pady=(20, 20))
 
-        self.start_button.grid(row=6, column=2, padx=(50, 10), pady=(20, 20))
+        self.start_button.grid(row=6, column=2, padx=(30, 10), pady=(20, 20))
         self.log.grid(row=7, column=1, columnspan=3, padx=(50, 10))
 
         root.after(500, self.read_serial)
