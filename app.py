@@ -7,13 +7,13 @@ try:
     serialPort = "/dev/ttyUSB0"
     baudRate = 9600
     ser = Serial(serialPort, baudRate, timeout=0, writeTimeout=0)
-    serBuffer = ""
+    serialBuffer = ""
 except:
     try:
         serialPort = "/dev/cu.usbserial-A600IP7D"
         baudRate = 9600
         ser = Serial(serialPort, baudRate, timeout=0, writeTimeout=0)
-        serBuffer = ""
+        serialBuffer = ""
     except:
         print("faild to find arduino")
         sys.exit()
@@ -105,7 +105,7 @@ class GUI:
                 break
 
             # get the buffer from outside of this function
-            global serBuffer
+            global serialBuffer
 
             # check if character is a delimeter
             if c == b'\r':
