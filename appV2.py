@@ -10,6 +10,9 @@ from serial import *
 from kivy.clock import Clock
 from services import connect_to_arduino
 from kivy.utils import get_color_from_hex
+from kivy.core.window import Window
+
+Window.fullscreen = 'auto'
 
 os.environ['KIVY_GL_BACKEND'] = 'gl'
 Config.set('graphics', 'width', '800')
