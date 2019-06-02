@@ -62,6 +62,15 @@ class YourApp(App):
                 self.output_label.text = current_value[:-1]
             else:
                 self.output_label.text = "0"
+        elif value == '.':
+            current_value = self.output_label.text
+            if current_value.count('.') < 1:
+                if current_value == '0':
+                    current_value = "0."
+                    self.output_label.text = current_value
+                else:
+                    self.output_label.text = current_value + str(value)
+
         else:
             current_value = self.output_label.text
             if current_value == '0':
@@ -71,7 +80,7 @@ class YourApp(App):
     def start(self, object):
         if serialConnection:
             value = self.output_label.text
-            if int(value) > -1:
+            if float(value) > -1:
                 command = "MC " + value + "\r"
                 serialConnection.write(command.encode())
                 self.output_label.text = "0"
@@ -88,7 +97,7 @@ class YourApp(App):
         button_symbols = ('1', '2', '3',
                           '4', '5', '6',
                           '7', '8', '9',
-                          '<', '0')
+                          '<', '0', '.')
 
         button_grid = GridLayout(cols=3, size_hint_y=2)
         for symbol in button_symbols:
