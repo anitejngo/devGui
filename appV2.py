@@ -80,7 +80,9 @@ class YourApp(App):
     def start(self, object):
         if serialConnection:
             value = self.output_label.text
-            if float(value) > -1:
+            # OFFSET MANUAL TODO
+            offset = float(value) - 60
+            if offset > -1:
                 command = "MC " + value + "\r"
                 serialConnection.write(command.encode())
                 self.output_label.text = "0"
