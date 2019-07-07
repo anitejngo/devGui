@@ -1,15 +1,14 @@
 import os
+from kivy.lang import Builder
 from kivy.app import App
-from kivy.uix.button import Button
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.label import Label
 from kivy.config import Config
-from functools import partial
 from serial import *
 from kivy.clock import Clock
 from services import connect_to_arduino
-from kivy.utils import get_color_from_hex
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.properties import StringProperty
+
+sm = ScreenManager()
 
 os.environ['KIVY_GL_BACKEND'] = 'gl'
 Config.set('graphics', 'fullscreen', 'auto')
@@ -26,9 +25,81 @@ except:
         print('Could not find arduino device!')
 
 
-class YourApp(App):
+# Declare both screens
+class MainScreen(Screen):
+    output_label = StringProperty("0")
+    last_cut = StringProperty("0")
+
+    def button_call_back(self, value):
+        if value == '<':
+            current_value = self.output_label
+            if current_value != '0' and len(current_value) > 1:
+                self.output_label = current_value[:-1]
+            else:
+                self.output_label = "0"
+        elif value == '.':
+            current_value = self.output_label
+            if current_value.count('.') < 1:
+                if current_value == '0':
+                    current_value = "0."
+                    self.output_label = current_value
+                else:
+                    self.output_label = current_value + str(value)
+
+        else:
+            current_value = self.output_label
+            if current_value == '0':
+                current_value = ""
+            self.output_label = current_value + str(value)
+
+    def start(self):
+        if serialConnection:
+            value = self.output_label
+            value = float(value) - float(self.manager.offset_label)
+            if value > -1:
+                command = "MC " + str(value) + "\r"
+                serialConnection.write(command.encode())
+                self.output_label = "0"
+                self.last_cut = value
+            else:
+                print('Not valid input')
+
+    pass
+
+
+class SettingsScreen(Screen):
+    def button_call_back(self, value):
+        if value == '<':
+            current_value = self.manager.offset_label
+            if current_value != '0' and len(current_value) > 1:
+                self.manager.offset_label = current_value[:-1]
+            else:
+                self.manager.offset_label = "0"
+        elif value == '.':
+            current_value = self.manager.offset_label
+            if current_value.count('.') < 1:
+                if current_value == '0':
+                    current_value = "0."
+                    self.manager.offset_label = current_value
+                else:
+                    self.manager.offset_label = current_value + str(value)
+
+        else:
+            current_value = self.manager.offset_label
+            if current_value == '0':
+                current_value = ""
+            self.manager.offset_label = current_value + str(value)
+
+    pass
+
+
+class ScreenManagement(ScreenManager):
+    offset_label = StringProperty('0')
+
+
+class CutterApp(App):
     def __init__(self, **kwargs):
-        super(YourApp, self).__init__(**kwargs)
+        super(CutterApp, self).__init__(**kwargs)
         refresh_time = 0.5
         Clock.schedule_interval(self.read_serial, refresh_time)
 
@@ -55,76 +126,9 @@ class YourApp(App):
                 else:
                     serialBuffer += str(c)[2:-1]  # add to the buffer
 
-    def button_call_back(self, value, object):
-        if value == '<':
-            current_value = self.output_label.text
-            if current_value != '0' and len(current_value) > 1:
-                self.output_label.text = current_value[:-1]
-            else:
-                self.output_label.text = "0"
-        elif value == '.':
-            current_value = self.output_label.text
-            if current_value.count('.') < 1:
-                if current_value == '0':
-                    current_value = "0."
-                    self.output_label.text = current_value
-                else:
-                    self.output_label.text = current_value + str(value)
-
-        else:
-            current_value = self.output_label.text
-            if current_value == '0':
-                current_value = ""
-            self.output_label.text = current_value + str(value)
-
-    def start(self, object):
-        if serialConnection:
-            value = self.output_label.text
-            # OFFSET MANUAL TODO
-            offset = float(value) - 60
-            if offset > -1:
-                command = "MC " + value + "\r"
-                serialConnection.write(command.encode())
-                self.output_label.text = "0"
-                self.last_cut.text = value
-            else:
-                print('Not valid input')
-
     def build(self):
-
-        self.output_label = Label(size_hint_y=1, text="0", font_size='50sp')
-        self.last_cut = Label(size_hint_y=1, text="0", font_size='30sp')
-        self.last_cut.color = get_color_from_hex('#A9A9A9')
-
-        button_symbols = ('1', '2', '3',
-                          '4', '5', '6',
-                          '7', '8', '9',
-                          '<', '0', '.')
-
-        button_grid = GridLayout(cols=3, size_hint_y=2)
-        for symbol in button_symbols:
-            dynamic_button = Button(text=symbol)
-            dynamic_button.bind(
-                on_press=partial(self.button_call_back, symbol))
-            button_grid.add_widget(dynamic_button)
-
-        start_button = Button(text='start', size_hint_y=None,
-                              height=100)
-        start_button.bind(
-            on_press=partial(self.start))
-
-        root_widget = BoxLayout(orientation='vertical')
-        label_widget = BoxLayout(orientation='horizontal')
-        command_widget = BoxLayout(orientation='vertical', padding=[0, 50, 0, 0])
-
-        label_widget.add_widget(self.output_label)
-        label_widget.add_widget(self.last_cut)
-        root_widget.add_widget(label_widget)
-        root_widget.add_widget(button_grid)
-        command_widget.add_widget(start_button)
-        root_widget.add_widget(command_widget)
-
-        return root_widget
+        return Builder.load_file("kivy.kv")
 
 
-YourApp().run()
+if __name__ == '__main__':
+    CutterApp().run()
