@@ -61,6 +61,11 @@ class MainScreen(Screen):
                 serialConnection.write(command.encode())
                 self.output_label = "0"
                 self.last_cut = str(value)
+            elif value is 0:
+                command = "MC 0\r"
+                serialConnection.write(command.encode())
+                self.output_label = "0"
+                self.last_cut = "0"
             else:
                 print('Not valid input')
 
