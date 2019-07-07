@@ -1,4 +1,6 @@
 import os
+
+os.environ['KIVY_GL_BACKEND'] = 'gl'
 from kivy.lang import Builder
 from kivy.app import App
 from kivy.config import Config
@@ -9,8 +11,6 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import StringProperty
 
 sm = ScreenManager()
-
-os.environ['KIVY_GL_BACKEND'] = 'gl'
 Config.set('graphics', 'fullscreen', 'auto')
 Config.set('graphics', 'window_state', 'maximized')
 serialConnection = None
