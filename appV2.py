@@ -61,12 +61,13 @@ class MainScreen(Screen):
                 self.output_label = "0"
                 self.last_cut = "0"
             else:
+                last_cut = value
                 value = float(value) - float(self.manager.offset_label)
                 if value > -1:
                     command = "MC " + str(value) + "\r"
                     serialConnection.write(command.encode())
                     self.output_label = "0"
-                    self.last_cut = str(value)
+                    self.last_cut = last_cut
 
                 else:
                     print('Not valid input')
