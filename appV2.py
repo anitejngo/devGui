@@ -9,12 +9,14 @@ from kivy.clock import Clock
 from services import connect_to_arduino
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import StringProperty
+from kivy.storage.jsonstore import JsonStore
 
 sm = ScreenManager()
 Config.set('graphics', 'fullscreen', 'auto')
 Config.set('graphics', 'window_state', 'maximized')
 serialConnection = None
 serialBuffer = ''
+store = JsonStore('config.json')
 
 try:
     serialConnection = connect_to_arduino('/dev/ttyUSB0')
@@ -98,11 +100,20 @@ class SettingsScreen(Screen):
                 current_value = ""
             self.manager.offset_label = current_value + str(value)
 
+    def save(self):
+        store.put('offset_label', value=self.manager.offset_label)
+        self.manager.offset_label = str(self.manager.offset_label)
+        self.manager.current = 'main'
+
     pass
 
 
 class ScreenManagement(ScreenManager):
-    offset_label = StringProperty('0')
+    if store.exists('offset_label'):
+        offset_label = StringProperty(store.get('offset_label')['value'])
+    else:
+        store.put('offset_label', value='0')
+        offset_label = StringProperty("0")
 
 
 class CutterApp(App):
