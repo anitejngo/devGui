@@ -1,9 +1,12 @@
 import os
+import git
+import subprocess
 
 os.environ['KIVY_GL_BACKEND'] = 'gl'
 from kivy.lang import Builder
 from kivy.app import App
 from kivy.config import Config
+from kivy.uix.popup import Popup
 from serial import *
 from kivy.clock import Clock
 from services import connect_to_arduino
@@ -27,7 +30,6 @@ except:
         print('Could not find arduino device!')
 
 
-# Declare both screens
 class MainScreen(Screen):
     output_label = StringProperty("0")
     last_cut = StringProperty("0")
@@ -105,6 +107,25 @@ class SettingsScreen(Screen):
         self.manager.offset_label = str(self.manager.offset_label)
         self.manager.current = 'main'
 
+    def update(self):
+        g = git.cmd.Git()
+        result = g.pull()
+        if result != "Already up to date.":
+            subprocess.call([sys.executable, "-m", "pip", "install", '-r', 'requirements.txt'])
+            popup = UpdatingPopup()
+            popup.open()
+            os.system('sudo shutdown -r now')
+        else:
+            popup = NoUpdatesPopup()
+            popup.open()
+        pass
+
+
+class NoUpdatesPopup(Popup):
+    pass
+
+
+class UpdatingPopup(Popup):
     pass
 
 
@@ -140,7 +161,6 @@ class CutterApp(App):
                     serialBuffer += "\n"  # add the newline to the buffer
 
                     # add the line to the TOP of the log
-                    print(serialBuffer)
                     serialBuffer = ""  # empty the buffer
                 else:
                     serialBuffer += str(c)[2:-1]  # add to the buffer

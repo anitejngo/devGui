@@ -147,3 +147,23 @@ ScreenManagement:
                 size_hint_y:None
                 height:100
                 on_press: root.save()
+
+            Button:
+                text:'Update'
+                size_hint_y:None
+                height:100
+                on_press: root.update()
+<NoUpdatesPopup>:
+    id:pop
+    size_hint: .4, .2
+    auto_dismiss: True
+    title: 'Warning'
+    Label:
+        text: 'There are no new updates available.'
+
+<UpdatingPopup>:
+    id:pop
+    size_hint: .4, .2
+    title: 'UPDATE'
+    Label:
+        text: 'Update is running app will restart when done!'
