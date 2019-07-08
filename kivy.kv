@@ -24,8 +24,8 @@ ScreenManagement:
                 on_press: root.manager.current = 'settings'
                 Image:
                     source: 'settings.png'
-                    y: self.parent.y + self.parent.height - (self.parent.height/2) - 45
-                    x: self.parent.x + self.parent.width - (self.parent.width/2) + 45
+                    y: self.parent.y + self.parent.height - (self.parent.height/2)
+                    x: self.parent.x + self.parent.width - (self.parent.width/2)
                     size: 45, 45
                     allow_stretch: True
 
@@ -103,8 +103,8 @@ ScreenManagement:
                 on_press: app.stop()
                 Image:
                     source: 'exit.png'
-                    y: self.parent.y + self.parent.height - (self.parent.height/2) - 45
-                    x: self.parent.x + self.parent.width - (self.parent.width/2) + 45
+                    y: self.parent.y + self.parent.height - (self.parent.height/2)
+                    x: self.parent.x + self.parent.width - (self.parent.width/2)
                     size: 45, 45
                     allow_stretch: True
 
