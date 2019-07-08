@@ -19,7 +19,6 @@ ScreenManagement:
                 size_hint_y:1
                 font_size:'30sp'
 
-
             Button:
                 background_color: (0, 0, 0, 1.0)
                 on_press: root.manager.current = 'settings'
@@ -98,6 +97,16 @@ ScreenManagement:
                 size_hint_y:1
                 text:root.manager.offset_label
                 font_size:'30sp'
+
+            Button:
+                background_color: (0, 0, 0, 1.0)
+                on_press: app.stop()
+                Image:
+                    source: 'exit.png'
+                    y: self.parent.y + self.parent.height - (self.parent.height/2) - 45
+                    x: self.parent.x + self.parent.width - (self.parent.width/2) + 45
+                    size: 90, 90
+                    allow_stretch: True
 
         GridLayout:
             cols:3
