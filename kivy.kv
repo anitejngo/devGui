@@ -24,9 +24,9 @@ ScreenManagement:
                 on_press: root.manager.current = 'settings'
                 Image:
                     source: 'settings.png'
-                    y: self.parent.y + self.parent.height - (self.parent.height/2)
-                    x: self.parent.x + self.parent.width - (self.parent.width/2)
-                    size: 45, 45
+                    y: self.parent.y + (self.parent.height/2) - 20
+                    x: self.parent.x + (self.parent.width/2) - 20
+                    size: 40, 40
                     allow_stretch: True
 
 
@@ -97,16 +97,6 @@ ScreenManagement:
                 size_hint_y:1
                 text:root.manager.offset_label
                 font_size:'30sp'
-
-            Button:
-                background_color: (0, 0, 0, 1.0)
-                on_press: 
-                Image:
-                    source: 'exit.png'
-                    y: self.parent.y + self.parent.height - (self.parent.height/2)
-                    x: self.parent.x + self.parent.width - (self.parent.width/2)
-                    size: 45, 45
-                    allow_stretch: True
 
         GridLayout:
             cols:3
