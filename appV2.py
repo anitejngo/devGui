@@ -1,5 +1,4 @@
 import os
-import git
 import subprocess
 from urllib.request import urlopen
 
