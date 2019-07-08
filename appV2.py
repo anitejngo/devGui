@@ -108,6 +108,7 @@ class SettingsScreen(Screen):
         self.manager.offset_label = str(self.manager.offset_label)
         self.manager.current = 'main'
 
+    # TODO not working with python 3
     def update(self):
         result = None
         try:
@@ -118,7 +119,7 @@ class SettingsScreen(Screen):
                 popup = NoUpdatesPopup()
                 popup.open()
             else:
-                subprocess.call([sys.executable, "-m", "pip", "install", '-r', 'requirements.txt'])
+                subprocess.call([sys.executable, "-m", "pip3", "install", '-r', 'requirements.txt'])
                 popup = UpdatingPopup()
                 popup.open()
                 os.system('sudo shutdown -r now')
