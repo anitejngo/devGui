@@ -1,8 +1,7 @@
 import os
 import subprocess
-from urllib.request import urlopen
-
 os.environ['KIVY_GL_BACKEND'] = 'gl'
+
 from kivy.lang import Builder
 from kivy.app import App
 from kivy.config import Config
@@ -108,23 +107,23 @@ class SettingsScreen(Screen):
         self.manager.current = 'main'
 
     # TODO not working with python 3
-    def update(self):
-        result = None
-        try:
-            data = urlopen("https://www.google.co.in")
-            g = git.cmd.Git()
-            result = g.pull()
-            if result == "Already up to date.":
-                popup = NoUpdatesPopup()
-                popup.open()
-            else:
-                subprocess.call([sys.executable, "-m", "pip3", "install", '-r', 'requirements.txt'])
-                popup = UpdatingPopup()
-                popup.open()
-                os.system('sudo shutdown -r now')
-        except Exception as e:
-            popup = NoConnectionPopup()
-            popup.open()
+    # def update(self):
+    #     result = None
+    #     try:
+    #         data = urlopen("https://www.google.co.in")
+    #         g = git.cmd.Git()
+    #         result = g.pull()
+    #         if result == "Already up to date.":
+    #             popup = NoUpdatesPopup()
+    #             popup.open()
+    #         else:
+    #             subprocess.call([sys.executable, "-m", "pip3", "install", '-r', 'requirements.txt'])
+    #             popup = UpdatingPopup()
+    #             popup.open()
+    #             os.system('sudo shutdown -r now')
+    #     except Exception as e:
+    #         popup = NoConnectionPopup()
+    #         popup.open()
 
         pass
 
