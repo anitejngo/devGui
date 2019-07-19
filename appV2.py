@@ -46,7 +46,9 @@ def print_label(value):
         printer = BrotherQLRaster('QL-700')
         print_data = brother_ql.brother_ql_create.convert(printer, [filename], '62', dither=True)
         send(print_data, PRINTER_IDENTIFIER)
-    except:
+    except Exception as E:
+        print("Failed to print")
+        print(E)
         pass
 
 
