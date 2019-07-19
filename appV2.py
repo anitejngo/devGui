@@ -90,9 +90,9 @@ class MainScreen(Screen):
                 last_cut = value
                 value = float(value) - float(self.manager.offset_label)
                 if value > -1:
-                    print_label(self.output_label)
                     command = "MC " + str(value) + "\r"
                     serialConnection.write(command.encode())
+                    print_label(self.output_label)
                     self.output_label = "0"
                     self.last_cut = last_cut
                 else:
