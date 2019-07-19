@@ -1,17 +1,25 @@
 import os
-import subprocess
+
 os.environ['KIVY_GL_BACKEND'] = 'gl'
 
 from kivy.lang import Builder
 from kivy.app import App
 from kivy.config import Config
 from kivy.uix.popup import Popup
-from serial import *
 from kivy.clock import Clock
 from services import connect_to_arduino
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import StringProperty
 from kivy.storage.jsonstore import JsonStore
+from PIL import Image, ImageDraw, ImageFont
+import brother_ql
+from brother_ql.raster import BrotherQLRaster
+from brother_ql.backends.helpers import send
+
+# Printer on mac
+# PRINTER_IDENTIFIER = 'usb://0x04f9:0x2042'
+# Printer on rasp
+PRINTER_IDENTIFIER = '/dev/ttyUSB1'
 
 sm = ScreenManager()
 Config.set('graphics', 'fullscreen', 'auto')
@@ -27,6 +35,22 @@ except:
         serialConnection = connect_to_arduino('/dev/cu.usbserial-A600IP7D')
     except:
         print('Could not find arduino device!')
+
+
+def print_label(value):
+    # print label
+    try:
+        filename = 'label.png'
+        img = Image.new('RGB', (62, 12), color=(255, 255, 255))
+        fnt = ImageFont.truetype('/Library/Fonts/Arial.ttf', 12)
+        d = ImageDraw.Draw(img)
+        d.text((10, 0), value, font=fnt, fill=(0, 0, 0))
+        img.save(filename)
+        printer = BrotherQLRaster('QL-700')
+        print_data = brother_ql.brother_ql_create.convert(printer, [filename], '62', dither=True)
+        send(print_data, PRINTER_IDENTIFIER)
+    except:
+        pass
 
 
 class MainScreen(Screen):
@@ -67,11 +91,11 @@ class MainScreen(Screen):
                 last_cut = value
                 value = float(value) - float(self.manager.offset_label)
                 if value > -1:
+                    print_label(self.output_label)
                     command = "MC " + str(value) + "\r"
                     serialConnection.write(command.encode())
                     self.output_label = "0"
                     self.last_cut = last_cut
-
                 else:
                     print('Not valid input')
 
@@ -106,26 +130,36 @@ class SettingsScreen(Screen):
         self.manager.offset_label = str(self.manager.offset_label)
         self.manager.current = 'main'
 
-    # TODO not working with python 3
-    # def update(self):
-    #     result = None
-    #     try:
-    #         data = urlopen("https://www.google.co.in")
-    #         g = git.cmd.Git()
-    #         result = g.pull()
-    #         if result == "Already up to date.":
-    #             popup = NoUpdatesPopup()
-    #             popup.open()
-    #         else:
-    #             subprocess.call([sys.executable, "-m", "pip3", "install", '-r', 'requirements.txt'])
-    #             popup = UpdatingPopup()
-    #             popup.open()
-    #             os.system('sudo shutdown -r now')
-    #     except Exception as e:
-    #         popup = NoConnectionPopup()
-    #         popup.open()
+        # TODO not working with python 3
+        # def update(self):
+        #     result = None
+        #     try:
+        #         data = urlopen("https://www.google.co.in")
+        #         g = git.cmd.Git()
+        #         result = g.pull()
+        #         if result == "Already up to date.":
+        #             popup = NoUpdatesPopup()
+        #             popup.open()
+        #         else:
+        #             subprocess.call([sys.executable, "-m", "pip3", "install", '-r', 'requirements.txt'])
+        #             popup = UpdatingPopup()
+        #             popup.open()
+        #             os.system('sudo shutdown -r now')
+        #     except Exception as e:
+        #         popup = NoConnectionPopup()
+        #         popup.open()
 
         pass
+
+
+class ListScreen(Screen):
+    def start(self):
+        self.manager.current = 'main'
+
+    def button_call_back(self, value):
+        pass
+
+    pass
 
 
 class NoConnectionPopup(Popup):
