@@ -39,9 +39,8 @@ def print_label(value):
     try:
         filename = 'label.png'
         img = Image.new('RGB', (62, 12), color=(255, 255, 255))
-        fnt = ImageFont.truetype('/Library/Fonts/Arial.ttf', 12)
         d = ImageDraw.Draw(img)
-        d.text((10, 0), value, font=fnt, fill=(0, 0, 0))
+        d.text((10, 0), value, fill=(0, 0, 0))
         img.save(filename)
         printer = BrotherQLRaster('QL-700')
         print_data = brother_ql.brother_ql_create.convert(printer, [filename], '62', dither=True)
