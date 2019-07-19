@@ -42,7 +42,7 @@ def print_label(value):
         d = ImageDraw.Draw(img)
         d.text((10, 0), value, fill=(0, 0, 0))
         img.save(filename)
-        printer = BrotherQLRaster('QL-700')
+        printer = BrotherQLRaster("QL-700")
         print_data = brother_ql.brother_ql_create.convert(printer, [filename], '62', dither=True)
         send(print_data, PRINTER_IDENTIFIER)
     except Exception as E:
