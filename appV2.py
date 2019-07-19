@@ -19,7 +19,7 @@ from brother_ql.backends.helpers import send
 # Printer on mac
 # PRINTER_IDENTIFIER = 'usb://0x04f9:0x2042'
 # Printer on rasp
-PRINTER_IDENTIFIER = '/dev/ttyUSB1'
+PRINTER_IDENTIFIER = '/dev/ttyUSB6'
 
 sm = ScreenManager()
 Config.set('graphics', 'fullscreen', 'auto')
