@@ -42,9 +42,10 @@ def print_label(value):
         d = ImageDraw.Draw(img)
         d.text((10, 0), value, fill=(0, 0, 0))
         img.save(filename)
-        printer = BrotherQLRaster("QL-700")
-        print_data = brother_ql.brother_ql_create.convert(printer, [filename], '62', dither=True)
-        send(print_data, PRINTER_IDENTIFIER)
+        # printer = BrotherQLRaster("QL-700")
+        # print_data = brother_ql.brother_ql_create.convert(printer, [filename], '62', dither=True)
+        # send(print_data, PRINTER_IDENTIFIER)
+        os.system('sudo brother_ql -p usb://0x04f9:0x2042 -b pyusb --model QL-700 print -l 62 label.png')
     except Exception as E:
         print("Failed to print")
         print(E)
