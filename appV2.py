@@ -1,4 +1,5 @@
 import os
+import socket
 
 os.environ['KIVY_GL_BACKEND'] = 'gl'
 
@@ -174,11 +175,13 @@ class UpdatingPopup(Popup):
 
 
 class ScreenManagement(ScreenManager):
+    host_name = socket.gethostbyname(socket.gethostname())
+    cutting_array = ["200", "220", "130", "200", "220", "130", "200", "220", "130", "200", "220", "130"]
     if store.exists('offset_label'):
         offset_label = StringProperty(store.get('offset_label')['value'])
     else:
         store.put('offset_label', value='0')
-        offset_label = StringProperty("0")
+    offset_label = StringProperty("0")
 
 
 class CutterApp(App):
@@ -214,4 +217,5 @@ class CutterApp(App):
 
 
 if __name__ == '__main__':
+    os.system('python ' + os.getcwd() + '/WebApp/main.py &')
     CutterApp().run()
