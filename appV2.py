@@ -12,10 +12,7 @@ from services import connect_to_arduino
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import StringProperty
 from kivy.storage.jsonstore import JsonStore
-from PIL import Image, ImageDraw, ImageFont
-import brother_ql
-from brother_ql.raster import BrotherQLRaster
-from brother_ql.backends.helpers import send
+from PIL import Image, ImageDraw
 
 PRINTER_IDENTIFIER = 'usb://0x04f9:0x2042'
 
@@ -36,16 +33,12 @@ except:
 
 
 def print_label(value):
-    # print label
     try:
         filename = 'label.png'
         img = Image.new('RGB', (62, 12), color=(255, 255, 255))
         d = ImageDraw.Draw(img)
         d.text((10, 0), value, fill=(0, 0, 0))
         img.save(filename)
-        # printer = BrotherQLRaster("QL-700")
-        # print_data = brother_ql.brother_ql_create.convert(printer, [filename], '62', dither=True)
-        # send(print_data, PRINTER_IDENTIFIER)
         os.system('sudo brother_ql -p usb://0x04f9:0x2042 -b pyusb --model QL-700 print -l 62 label.png')
     except Exception as E:
         print("Failed to print")
@@ -175,13 +168,13 @@ class UpdatingPopup(Popup):
 
 
 class ScreenManagement(ScreenManager):
-    host_name = socket.gethostbyname(socket.gethostname())
-    cutting_array = ["200", "220", "130", "200", "220", "130", "200", "220", "130", "200", "220", "130"]
+    #host_name = socket.gethostbyname(socket.gethostname())
+    host_name = ""
     if store.exists('offset_label'):
         offset_label = StringProperty(store.get('offset_label')['value'])
     else:
         store.put('offset_label', value='0')
-    offset_label = StringProperty("0")
+        offset_label = StringProperty("0")
 
 
 class CutterApp(App):
@@ -217,5 +210,5 @@ class CutterApp(App):
 
 
 if __name__ == '__main__':
-    os.system('python ' + os.getcwd() + '/WebApp/main.py &')
+    #os.system('python ' + os.getcwd() + '/WebApp/main.py &')
     CutterApp().run()
