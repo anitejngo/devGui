@@ -13,6 +13,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import StringProperty
 from kivy.storage.jsonstore import JsonStore
 from PIL import Image, ImageDraw
+from threading import Timer
 
 PRINTER_IDENTIFIER = 'usb://0x04f9:0x2042'
 
@@ -72,7 +73,12 @@ class MainScreen(Screen):
                 current_value = ""
             self.output_label = current_value + str(value)
 
+    def enable_start_button(self):
+        self.ids.start_button.disabled = False
+
     def start(self):
+        self.ids.start_button.disabled = True
+        Timer(2, lambda: self.enable_start_button()).start()
         if serialConnection:
             value = self.output_label
             if value is "0":
@@ -146,10 +152,11 @@ class SettingsScreen(Screen):
 
 
 class ListScreen(Screen):
-    def start(self):
+    def read_file(self):
         self.manager.current = 'main'
 
     def button_call_back(self, value):
+        self.manager.current = 'main'
         pass
 
     pass
@@ -168,7 +175,7 @@ class UpdatingPopup(Popup):
 
 
 class ScreenManagement(ScreenManager):
-    #host_name = socket.gethostbyname(socket.gethostname())
+    # host_name = socket.gethostbyname(socket.gethostname())
     host_name = ""
     if store.exists('offset_label'):
         offset_label = StringProperty(store.get('offset_label')['value'])
@@ -210,5 +217,5 @@ class CutterApp(App):
 
 
 if __name__ == '__main__':
-    #os.system('python ' + os.getcwd() + '/WebApp/main.py &')
+    # os.system('python ' + os.getcwd() + '/WebApp/main.py &')
     CutterApp().run()

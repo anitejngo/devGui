@@ -93,12 +93,12 @@ ScreenManagement:
             orientation:'horizontal'
             padding:[0, 50, 0, 0]
             Button:
+                id: start_button
                 background_color: (0, 128, 0, 0.5)
                 text:'START'
                 size_hint_y:None
                 height:100
                 on_press: root.start()
-
 
 <SettingsScreen>:
     name: "settings"
@@ -173,26 +173,16 @@ ScreenManagement:
         orientation:'vertical'
         Button:
             background_color: (0, 128, 0, 0.5)
-            text:'READFILE'
+            text:'read csv'
             size_hint_y:None
             height:100
-            on_press: root.start()
+            on_press: root.read_file()
         BoxLayout:
             orientation:'horizontal'
             Label:
                 size_hint_y:None
                 text:root.manager.host_name
                 font_size:'20sp'
-
-        BoxLayout:
-            orientation:'horizontal'
-            padding:[0, 50, 0, 0]
-            Button:
-                background_color: (0, 128, 0, 0.5)
-                text:'START'
-                size_hint_y:None
-                height:100
-                on_press: root.start()
 
 <NoUpdatesPopup>:
     id:pop
