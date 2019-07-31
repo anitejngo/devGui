@@ -1,4 +1,5 @@
 import os
+
 os.environ['KIVY_GL_BACKEND'] = 'gl'
 
 from kivy.lang import Builder
@@ -227,5 +228,5 @@ class CutterApp(App):
 
 
 if __name__ == '__main__':
-    os.system('python ' + os.getcwd() + '/WebApp/main.py &')
+    # os.system('python ' + os.getcwd() + '/WebApp/main.py &')
     CutterApp().run()
