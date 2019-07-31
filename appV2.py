@@ -134,6 +134,12 @@ class SettingsScreen(Screen):
     def update(self):
         try:
             data = urllib.urlopen("https://www.google.com")
+        except Exception as e:
+            print(e)
+            popup = NoConnectionPopup()
+            popup.open()
+
+        try:
             update_check = git("pull")
             if "Already up to date." in update_check:
                 popup = NoUpdatesPopup()
@@ -144,9 +150,9 @@ class SettingsScreen(Screen):
                 os.system('pip install -r requirements.txt')
                 os.system('sudo shutdown -r now')
         except Exception as e:
+            print("failed to update")
             print(e)
-            popup = NoConnectionPopup()
-            popup.open()
+
         pass
 
 
