@@ -185,8 +185,10 @@ class UpdatingPopup(Popup):
 
 
 class ScreenManagement(ScreenManager):
-    # host_name = socket.gethostbyname(socket.gethostname())
-    host_name = ""
+    try:
+        host_name = socket.gethostbyname(socket.gethostname())
+    except:
+        host_name = "Could not get ip"
     if store.exists('offset_label'):
         offset_label = StringProperty(store.get('offset_label')['value'])
     else:
@@ -227,5 +229,5 @@ class CutterApp(App):
 
 
 if __name__ == '__main__':
-    # os.system('python ' + os.getcwd() + '/WebApp/main.py &')
+    os.system('python ' + os.getcwd() + '/WebApp/main.py &')
     CutterApp().run()
