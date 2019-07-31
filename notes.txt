@@ -11,3 +11,7 @@ In order to be able to install Kivy:
 
     pip install --upgrade --user pip setuptools
     pip install --upgrade --user Cython==0.29.10 pillow
+
+
+
+Change for update test!
