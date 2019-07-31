@@ -142,14 +142,15 @@ class SettingsScreen(Screen):
         try:
             update_check = git("pull")
             print(update_check)
-            # if "Already up to date." in update_check:
-            #     popup = NoUpdatesPopup()
-            #     popup.open()
-            # else:
-            #     popup = UpdatingPopup()
-            #     popup.open()
-            #     os.system('pip install -r requirements.txt')
-            #     os.system('sudo shutdown -r now')
+            if "Already up to date." in update_check:
+                print("UP TO DATE!")
+                #popup = NoUpdatesPopup()
+                #popup.open()
+            else:
+                #popup = UpdatingPopup()
+                #popup.open()
+                os.system('pip install -r requirements.txt')
+                os.system('sudo shutdown -r now')
         except Exception as e:
             print("failed to update")
             print(e)
