@@ -1,6 +1,4 @@
 import os
-import socket
-
 os.environ['KIVY_GL_BACKEND'] = 'gl'
 
 from kivy.lang import Builder
@@ -186,7 +184,7 @@ class UpdatingPopup(Popup):
 
 class ScreenManagement(ScreenManager):
     try:
-        host_name = socket.gethostbyname(socket.getfqdn())
+        host_name = os.popen('hostname -I').read()
     except:
         host_name = "Could not get ip"
     if store.exists('offset_label'):
