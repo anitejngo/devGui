@@ -104,6 +104,12 @@ ScreenManagement:
     name: "settings"
     BoxLayout:
         orientation:'vertical'
+        Button:
+            background_color: (0, 128, 0, 0.5)
+            text:'Update'
+            size_hint_y:None
+            height:100
+            on_press: root.update()
         BoxLayout:
             orientation:'horizontal'
             Label:

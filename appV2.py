@@ -14,6 +14,8 @@ from kivy.properties import StringProperty
 from kivy.storage.jsonstore import JsonStore
 from PIL import Image, ImageDraw
 from threading import Timer
+import git
+import urllib
 
 PRINTER_IDENTIFIER = 'usb://0x04f9:0x2042'
 
@@ -129,24 +131,25 @@ class SettingsScreen(Screen):
         self.manager.offset_label = str(self.manager.offset_label)
         self.manager.current = 'main'
 
-        # TODO not working with python 3
-        # def update(self):
-        #     result = None
-        #     try:
-        #         data = urlopen("https://www.google.co.in")
-        #         g = git.cmd.Git()
-        #         result = g.pull()
-        #         if result == "Already up to date.":
-        #             popup = NoUpdatesPopup()
-        #             popup.open()
-        #         else:
-        #             subprocess.call([sys.executable, "-m", "pip3", "install", '-r', 'requirements.txt'])
-        #             popup = UpdatingPopup()
-        #             popup.open()
-        #             os.system('sudo shutdown -r now')
-        #     except Exception as e:
-        #         popup = NoConnectionPopup()
-        #         popup.open()
+    def update(self):
+        result = None
+        try:
+            data = urllib.urlopen("https://www.google.co.in")
+            g = git.cmd.Git()
+            result = g.pull()
+            if result == "Already up to date.":
+                popup = NoUpdatesPopup()
+                popup.open()
+            else:
+                # subprocess.call([sys.executable, "-m", "pip", "install", '-r', 'requirements.txt'])
+                os.system('pip install -r requirements.txt')
+                popup = UpdatingPopup()
+                popup.open()
+                os.system('sudo shutdown -r now')
+        except Exception as e:
+            print(e)
+            popup = NoConnectionPopup()
+            popup.open()
 
         pass
 
