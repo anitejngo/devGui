@@ -14,4 +14,4 @@ In order to be able to install Kivy:
 
 
 
-Change for update test!
+Change for update test #2
