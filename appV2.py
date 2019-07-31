@@ -150,9 +150,7 @@ class SettingsScreen(Screen):
                 popup.open()
 
                 def pip_install_and_shutdown():
-                    os.system('pip install -r requirements.txt')
-                    os.system('sudo shutdown -r now')
-
+                    os.system('pip install -r requirements.txt && reboot')
                 threading.Timer(3.0, pip_install_and_shutdown).start()
 
         except Exception as e:
