@@ -141,10 +141,10 @@ class SettingsScreen(Screen):
                 popup = NoUpdatesPopup()
                 popup.open()
             else:
-                # subprocess.call([sys.executable, "-m", "pip", "install", '-r', 'requirements.txt'])
-                os.system('pip install -r requirements.txt')
                 popup = UpdatingPopup()
                 popup.open()
+                # subprocess.call([sys.executable, "-m", "pip", "install", '-r', 'requirements.txt'])
+                os.system('pip install -r requirements.txt')
                 os.system('sudo shutdown -r now')
         except Exception as e:
             print(e)
