@@ -16,6 +16,7 @@ from PIL import Image, ImageDraw
 from threading import Timer
 import urllib
 from sh import git
+import threading
 
 PRINTER_IDENTIFIER = 'usb://0x04f9:0x2042'
 
@@ -145,11 +146,15 @@ class SettingsScreen(Screen):
                 popup = NoUpdatesPopup()
                 popup.open()
             else:
-                print("else")
-                # popup = UpdatingPopup()
-                # popup.open()
-                # os.system('pip install -r requirements.txt')
-                # os.system('sudo shutdown -r now')
+                popup = UpdatingPopup()
+                popup.open()
+
+                def pip_install_and_shutdown():
+                    os.system('pip install -r requirements.txt')
+                    os.system('sudo shutdown -r now')
+
+                threading.Timer(3.0, pip_install_and_shutdown).start()
+
         except Exception as e:
             print("failed to update")
             print(e)

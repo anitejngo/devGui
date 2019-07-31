@@ -201,7 +201,7 @@ ScreenManagement:
 <UpdatingPopup>:
     id:pop
     size_hint: .4, .2
-    auto_dismiss: True
+    auto_dismiss: False
     title: 'UPDATE'
     Label:
         text: 'Update is running app will restart when done!'
@@ -209,6 +209,7 @@ ScreenManagement:
 <NoConnectionPopup>:
     id:pop
     size_hint: .4, .2
+    auto_dismiss: True
     title: 'Internet connection not available'
     Label:
         text: 'Could not update since there is no internet!'
