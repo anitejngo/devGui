@@ -134,18 +134,18 @@ class SettingsScreen(Screen):
     def update(self):
         result = None
         try:
-            data = urllib.urlopen("https://www.google.co.in")
-            g = git.cmd.Git()
-            result = g.pull()
-            if result == "Already up to date.":
-                popup = NoUpdatesPopup()
-                popup.open()
-            else:
-                popup = UpdatingPopup()
-                popup.open()
-                # subprocess.call([sys.executable, "-m", "pip", "install", '-r', 'requirements.txt'])
-                os.system('pip install -r requirements.txt')
-                os.system('sudo shutdown -r now')
+            data = urllib.urlopen("https://www.google.com")
+            # g = git.cmd.Git()
+            # result = g.pull()
+            # if result == "Already up to date.":
+            #     popup = NoUpdatesPopup()
+            #     popup.open()
+            # else:
+            #     popup = UpdatingPopup()
+            #     popup.open()
+            #     # subprocess.call([sys.executable, "-m", "pip", "install", '-r', 'requirements.txt'])
+            #     os.system('pip install -r requirements.txt')
+            #     os.system('sudo shutdown -r now')
         except Exception as e:
             print(e)
             popup = NoConnectionPopup()
