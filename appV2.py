@@ -186,7 +186,7 @@ class UpdatingPopup(Popup):
 
 class ScreenManagement(ScreenManager):
     try:
-        host_name = socket.gethostbyname(socket.gethostname())
+        host_name = socket.gethostbyname(socket.getfqdn())
     except:
         host_name = "Could not get ip"
     if store.exists('offset_label'):
