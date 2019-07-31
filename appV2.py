@@ -141,11 +141,9 @@ class SettingsScreen(Screen):
 
         try:
             update_check = git("pull")
-            print(update_check)
-            if "Already up to date." in update_check:
-                print("UP TO DATE!")
-                # popup = NoUpdatesPopup()
-                # popup.open()
+            if "Already up to date." in update_check or "Already up-to-date." in update_check:
+                popup = NoUpdatesPopup()
+                popup.open()
             else:
                 print("else")
                 # popup = UpdatingPopup()
