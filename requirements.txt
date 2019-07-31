@@ -16,6 +16,7 @@ Pygments==2.3.1
 pyserial==3.4
 pyusb==1.0.2
 requests==2.21.0
+sh==1.12.14
 smmap2==2.0.5
 urllib3==1.24.3
 Flask==1.1.1

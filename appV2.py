@@ -15,7 +15,7 @@ from kivy.storage.jsonstore import JsonStore
 from PIL import Image, ImageDraw
 from threading import Timer
 import urllib
-from subprocess import Popen, PIPE
+from sh import git
 
 PRINTER_IDENTIFIER = 'usb://0x04f9:0x2042'
 
@@ -134,9 +134,8 @@ class SettingsScreen(Screen):
     def update(self):
         try:
             data = urllib.urlopen("https://www.google.com")
-            proc = Popen(['git pull'], shell=True, stdout=PIPE, stderr=PIPE)
-            out, err = proc.communicate()
-            if "Already up to date." in out:
+            update_check = git("pull")
+            if "Already up to date." in update_check:
                 popup = NoUpdatesPopup()
                 popup.open()
             else:
