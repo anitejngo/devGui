@@ -11,7 +11,7 @@ from services import connect_to_arduino
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import StringProperty
 from kivy.storage.jsonstore import JsonStore
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw,ImageFont
 from threading import Timer
 import urllib
 from sh import git
@@ -38,9 +38,10 @@ except:
 def print_label(value):
     try:
         filename = 'label.png'
-        img = Image.new('RGB', (62, 12), color=(255, 255, 255))
+        fnt = ImageFont.truetype("arial.ttf", 100)
+        img = Image.new('RGB', (696, 271), color=(255, 255, 255))
         d = ImageDraw.Draw(img)
-        d.text((10, 0), value, fill=(0, 0, 0))
+        d.text((10, 0), value, font=fnt, fill=(0, 0, 0))
         img.save(filename)
         os.system('sudo brother_ql -p usb://0x04f9:0x2042 -b pyusb --model QL-700 print -l 62x29 label.png')
     except Exception as E:
