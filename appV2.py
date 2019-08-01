@@ -38,11 +38,11 @@ except:
 def print_label(value):
     try:
         filename = 'label.png'
-        img = Image.new('RGB', (62, 12), color=(255, 255, 255))
+        img = Image.new('RGB', (696, 271), color=(255, 255, 255))
         d = ImageDraw.Draw(img)
         d.text((10, 0), value, fill=(0, 0, 0))
         img.save(filename)
-        os.system('sudo brother_ql -p usb://0x04f9:0x2042 -b pyusb --model QL-700 print -l 62x29 label.png')
+        os.system('sudo brother_ql -p usb://0x04f9:0x2042 -b pyusb --model QL-700 print -l 62x29 die-cut label.png')
     except Exception as E:
         print("Failed to print")
         print(E)
