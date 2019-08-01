@@ -8,8 +8,6 @@ future==0.17.1
 gitdb2==2.0.5
 GitPython==2.1.11
 idna==2.8
-Kivy==1.10.1
-Kivy-Garden==0.1.4
 packbits==0.6
 Pillow==6.1.0
 Pygments==2.3.1
