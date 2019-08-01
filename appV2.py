@@ -38,7 +38,7 @@ except:
 def print_label(value):
     try:
         filename = 'label.png'
-        fnt = ImageFont.truetype('/Library/Fonts/Arial.ttf', 60)
+        fnt = ImageFont.truetype('Lato-Regular.ttf', 60)
         img = Image.new('RGB', (696, 271), color=(255, 255, 255))
         d = ImageDraw.Draw(img)
         d.text((10, 0), value, font=fnt, fill=(0, 0, 0))
