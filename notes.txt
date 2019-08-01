@@ -14,4 +14,23 @@ In order to be able to install Kivy:
 
 
 
-Change for update test #3
+-------------------------------------------------------------------------
+Startup service
+-------------------------------------------------------------------------
+
+file:
+/lib/systemd/system/lm.service
+
+[Unit]
+Description=Start the app
+After=network.target
+
+[Service]
+ExecStart=/usb/bin/python appV2.py
+WorkingDirectory=/home/pi/devGui
+StandardOutput=inherit
+StandardError=inherit
+User=pi
+
+[Install]
+WantedBy=multi-user.target
