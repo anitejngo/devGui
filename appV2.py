@@ -40,7 +40,7 @@ def print_label(value):
         filename = 'label.png'
         img = Image.new('RGB', (696, 271), color=(255, 255, 255))
         d = ImageDraw.Draw(img)
-        d.text((10, 0), value, fill=(0, 0, 0))
+        d.text((100, 0), value, fill=(0, 0, 0))
         img.save(filename)
         os.system('sudo brother_ql -p usb://0x04f9:0x2042 -b pyusb --model QL-700 print -l 62x29 -type die-cut label.png')
     except Exception as E:
