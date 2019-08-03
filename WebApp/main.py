@@ -1,11 +1,8 @@
 import os
-from flask import flash, request, redirect, render_template
+from flask import Flask, flash, request, redirect, render_template
 from werkzeug.utils import secure_filename
 
-from flask import Flask
-from os import getcwd
-
-UPLOAD_FOLDER = getcwd() + '/uploads'
+UPLOAD_FOLDER = os.getcwd() + '/uploads'
 
 app = Flask(__name__)
 app.secret_key = "secret key"
