@@ -40,3 +40,15 @@ WantedBy=multi-user.target
 
 print command:
 sudo brother_ql -p usb://0x04f9:0x2042 -b pyusb --model QL-700 print -l 62x29 -type die-cut label.png
+
+
+-------------------------------------------------------------------------
+
+running web app with nginx:
+
+sudo apt-get install nginx
+pip install uwsgi
+
+run command:
+
+uwsgi --socket 0.0.0.0:8000 --protocol=http -w wsgi
