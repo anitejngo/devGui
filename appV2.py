@@ -16,11 +16,6 @@ from threading import Timer
 import urllib
 from sh import git
 import threading
-import brother_ql
-from brother_ql.raster import BrotherQLRaster
-from brother_ql.backends.helpers import send
-
-PRINTER_IDENTIFIER = 'usb://0x04f9:0x2042'
 
 sm = ScreenManager()
 Config.set('graphics', 'fullscreen', 'auto')
@@ -46,10 +41,7 @@ def print_label(value):
         d = ImageDraw.Draw(img)
         d.text((10, 0), value, font=fnt, fill=(0, 0, 0))
         img.save(filename)
-        #os.system('sudo brother_ql -p usb://0x04f9:0x2042 -b pyusb --model QL-700 print -l 62x29 label.png')
-        printer = BrotherQLRaster('Brother QL-700')
-        print_data = brother_ql.brother_ql_create.convert(printer, 'label.png', '62x29')
-        send(print_data, 'usb://0x04f9:0x2042')
+        os.system('sudo brother_ql -p usb://0x04f9:0x2042 -b pyusb --model QL-700 print -l 62x29 label.png')
     except Exception as E:
         print("Failed to print")
         print(E)
