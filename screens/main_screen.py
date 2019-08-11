@@ -1,0 +1,66 @@
+from kivy.properties import StringProperty
+from kivy.uix.screenmanager import Screen
+from threading import Timer
+from services import connect_to_arduino
+
+try:
+    serialConnection = connect_to_arduino('/dev/ttyUSB0')
+except Exception as E:
+    try:
+        serialConnection = connect_to_arduino('/dev/cu.usbserial-A600IP7D')
+    except Exception as E:
+        print('Could not find arduino device!')
+
+
+class MainScreen(Screen):
+    output_label = StringProperty("0")
+    last_cut = StringProperty("0")
+
+    def button_call_back(self, value):
+        if value == '<':
+            current_value = self.output_label
+            if current_value != '0' and len(current_value) > 1:
+                self.output_label = current_value[:-1]
+            else:
+                self.output_label = "0"
+        elif value == '.':
+            current_value = self.output_label
+            if current_value.count('.') < 1:
+                if current_value == '0':
+                    current_value = "0."
+                    self.output_label = current_value
+                else:
+                    self.output_label = current_value + str(value)
+
+        else:
+            current_value = self.output_label
+            if current_value == '0':
+                current_value = ""
+            self.output_label = current_value + str(value)
+
+    def enable_start_button(self):
+        self.ids.start_button.disabled = False
+
+    def start(self):
+        self.ids.start_button.disabled = True
+        Timer(2, lambda: self.enable_start_button()).start()
+        if serialConnection:
+            value = self.output_label
+            if value is "0":
+                command = "MC 0\r"
+                serialConnection.write(command.encode())
+                self.output_label = "0"
+                self.last_cut = "0"
+            else:
+                last_cut = value
+                value = float(value) - float(self.manager.offset_label)
+                if value > -1:
+                    command = "MC " + str(value) + "\r"
+                    serialConnection.write(command.encode())
+                    print_label(self.output_label)
+                    self.output_label = "0"
+                    self.last_cut = last_cut
+                else:
+                    print('Not valid input')
+
+    pass

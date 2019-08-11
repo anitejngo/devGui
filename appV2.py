@@ -1,185 +1,20 @@
 import os
-
-os.environ['KIVY_GL_BACKEND'] = 'gl'
-
 from kivy.lang import Builder
 from kivy.app import App
 from kivy.config import Config
-from kivy.uix.popup import Popup
 from kivy.clock import Clock
-from services import connect_to_arduino
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import ScreenManager
 from kivy.properties import StringProperty
 from kivy.storage.jsonstore import JsonStore
-from PIL import Image, ImageDraw,ImageFont
-from threading import Timer
-import urllib
-from sh import git
-import threading
+from screens import main_screen, list_screen, settings_screen
 
+os.environ['KIVY_GL_BACKEND'] = 'gl'
 sm = ScreenManager()
 Config.set('graphics', 'fullscreen', 'auto')
 Config.set('graphics', 'window_state', 'maximized')
 serialConnection = None
 serialBuffer = ''
 store = JsonStore('config.json')
-
-try:
-    serialConnection = connect_to_arduino('/dev/ttyUSB0')
-except:
-    try:
-        serialConnection = connect_to_arduino('/dev/cu.usbserial-A600IP7D')
-    except:
-        print('Could not find arduino device!')
-
-
-def print_label(value):
-    try:
-        filename = 'label.png'
-        fnt = ImageFont.truetype('Lato-Regular.ttf', 200)
-        img = Image.new('RGB', (696, 271), color=(255, 255, 255))
-        d = ImageDraw.Draw(img)
-        d.text((10, 0), value, font=fnt, fill=(0, 0, 0))
-        img.save(filename)
-        os.system('sudo brother_ql -p usb://0x04f9:0x2042 -b pyusb --model QL-700 print -l 62x29 label.png')
-    except Exception as E:
-        print("Failed to print")
-        print(E)
-        pass
-
-
-class MainScreen(Screen):
-    output_label = StringProperty("0")
-    last_cut = StringProperty("0")
-
-    def button_call_back(self, value):
-        if value == '<':
-            current_value = self.output_label
-            if current_value != '0' and len(current_value) > 1:
-                self.output_label = current_value[:-1]
-            else:
-                self.output_label = "0"
-        elif value == '.':
-            current_value = self.output_label
-            if current_value.count('.') < 1:
-                if current_value == '0':
-                    current_value = "0."
-                    self.output_label = current_value
-                else:
-                    self.output_label = current_value + str(value)
-
-        else:
-            current_value = self.output_label
-            if current_value == '0':
-                current_value = ""
-            self.output_label = current_value + str(value)
-
-    def enable_start_button(self):
-        self.ids.start_button.disabled = False
-
-    def start(self):
-        self.ids.start_button.disabled = True
-        Timer(2, lambda: self.enable_start_button()).start()
-        if serialConnection:
-            value = self.output_label
-            if value is "0":
-                command = "MC 0\r"
-                serialConnection.write(command.encode())
-                self.output_label = "0"
-                self.last_cut = "0"
-            else:
-                last_cut = value
-                value = float(value) - float(self.manager.offset_label)
-                if value > -1:
-                    command = "MC " + str(value) + "\r"
-                    serialConnection.write(command.encode())
-                    print_label(self.output_label)
-                    self.output_label = "0"
-                    self.last_cut = last_cut
-                else:
-                    print('Not valid input')
-
-    pass
-
-
-class SettingsScreen(Screen):
-    def button_call_back(self, value):
-        if value == '<':
-            current_value = self.manager.offset_label
-            if current_value != '0' and len(current_value) > 1:
-                self.manager.offset_label = current_value[:-1]
-            else:
-                self.manager.offset_label = "0"
-        elif value == '.':
-            current_value = self.manager.offset_label
-            if current_value.count('.') < 1:
-                if current_value == '0':
-                    current_value = "0."
-                    self.manager.offset_label = current_value
-                else:
-                    self.manager.offset_label = current_value + str(value)
-
-        else:
-            current_value = self.manager.offset_label
-            if current_value == '0':
-                current_value = ""
-            self.manager.offset_label = current_value + str(value)
-
-    def save(self):
-        store.put('offset_label', value=self.manager.offset_label)
-        self.manager.offset_label = str(self.manager.offset_label)
-        self.manager.current = 'main'
-
-    def update(self):
-        try:
-            data = urllib.urlopen("https://www.google.com")
-        except Exception as e:
-            print(e)
-            popup = NoConnectionPopup()
-            popup.open()
-
-        try:
-            update_check = git("pull")
-            if "Already up to date." in update_check or "Already up-to-date." in update_check:
-                popup = NoUpdatesPopup()
-                popup.open()
-            else:
-                popup = UpdatingPopup()
-                popup.open()
-
-                def pip_install_and_shutdown():
-                    os.system('pip install -r requirements.txt & reboot')
-
-                threading.Timer(3.0, pip_install_and_shutdown).start()
-
-        except Exception as e:
-            print("failed to update")
-            print(e)
-
-        pass
-
-
-class ListScreen(Screen):
-    def read_file(self):
-        self.manager.current = 'main'
-
-    def button_call_back(self, value):
-        self.manager.current = 'main'
-        pass
-
-    pass
-
-
-class NoConnectionPopup(Popup):
-    pass
-
-
-class NoUpdatesPopup(Popup):
-    pass
-
-
-class UpdatingPopup(Popup):
-    pass
 
 
 class ScreenManagement(ScreenManager):
