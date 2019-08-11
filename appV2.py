@@ -6,7 +6,7 @@ from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager
 from kivy.properties import StringProperty
 from kivy.storage.jsonstore import JsonStore
-from screens import main_screen, list_screen, settings_screen
+from screens import main_screen, list_screen, offset_screen,settings_screen
 
 os.environ['KIVY_GL_BACKEND'] = 'gl'
 sm = ScreenManager()
@@ -58,7 +58,7 @@ class CutterApp(App):
                     serialBuffer += str(c)[2:-1]  # add to the buffer
 
     def build(self):
-        return Builder.load_file("kivy.kv")
+        return Builder.load_file("screens/kivy.kv")
 
 
 if __name__ == '__main__':

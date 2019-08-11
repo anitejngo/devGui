@@ -2,8 +2,9 @@
 
 ScreenManagement:
     MainScreen:
-    SettingsScreen:
+    OffsetScreen:
     ListScreen:
+    SettingsScreen:
 
 <MainScreen>:
     name: "main"
@@ -27,6 +28,7 @@ ScreenManagement:
                 GridLayout:
                     cols:2
                     size_hint_y:1
+                    padding:[0,0,0,40]
                     Button:
                         background_color: (0, 0, 0, 1.0)
                         on_press: root.manager.current = 'list'
@@ -38,6 +40,18 @@ ScreenManagement:
                             allow_stretch: True
                     Button:
                         background_color: (0, 0, 0, 1.0)
+                        on_press: root.manager.current = 'offset'
+                        Image:
+                            source: 'assets/measure.png'
+                            y: self.parent.y + (self.parent.height/2) - 20
+                            x: self.parent.x + (self.parent.width/2) - 20
+                            size: 40, 40
+                            allow_stretch: True
+                    Button:
+                        background_color: (0, 0, 0, 1.0)
+
+                    Button:
+                        background_color: (0, 0, 0, 1.0)
                         on_press: root.manager.current = 'settings'
                         Image:
                             source: 'assets/settings.png'
@@ -45,10 +59,6 @@ ScreenManagement:
                             x: self.parent.x + (self.parent.width/2) - 20
                             size: 40, 40
                             allow_stretch: True
-                Button:
-                    background_color: (0, 0, 0, 1.0)
-
-
         GridLayout:
             cols:3
             size_hint_y:2
@@ -127,16 +137,10 @@ ScreenManagement:
                 height:100
                 on_press: root.start()
 
-<SettingsScreen>:
-    name: "settings"
+<OffsetScreen>:
+    name: "offset"
     BoxLayout:
         orientation:'vertical'
-        Button:
-            background_color: (0, 128, 0, 0.5)
-            text:'Update'
-            size_hint_y:None
-            height:100
-            on_press: root.update()
         BoxLayout:
             orientation:'horizontal'
             Label:
@@ -240,6 +244,26 @@ ScreenManagement:
                 size_hint_y:None
                 text:root.manager.host_name
                 font_size:'20sp'
+
+
+<SettingsScreen>:
+    name:"settings"
+    BoxLayout:
+        orientation:'vertical'
+        spacing:100
+        Button:
+            background_color: (0, 128, 0, 0.5)
+            text:'Update'
+            size_hint_y:None
+            height:100
+            on_press: root.update()
+        Button:
+            background_color: (0, 128, 0, 0.5)
+            text:'BACK'
+            size_hint_y:None
+            height:100
+            on_press: root.manager.current = 'main'
+
 
 <NoUpdatesPopup>:
     id:pop
