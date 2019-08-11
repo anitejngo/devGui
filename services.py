@@ -1,5 +1,7 @@
 from serial import Serial
 import csv
+from PIL import Image, ImageDraw, ImageFont
+import os
 
 
 def connect_to_arduino(serial_port):
@@ -26,3 +28,18 @@ def parse_csv_cutting_list(path_to_csv):
             temp.append(data)
 
     return layouts
+
+
+def print_label(value):
+    try:
+        filename = 'label.png'
+        fnt = ImageFont.truetype('/assets/Lato-Regular.ttf', 200)
+        img = Image.new('RGB', (696, 271), color=(255, 255, 255))
+        d = ImageDraw.Draw(img)
+        d.text((10, 0), value, font=fnt, fill=(0, 0, 0))
+        img.save(filename)
+        os.system('sudo brother_ql -p usb://0x04f9:0x2042 -b pyusb --model QL-700 print -l 62x29 label.png')
+    except Exception as E:
+        print("Failed to print")
+        print(E)
+        pass

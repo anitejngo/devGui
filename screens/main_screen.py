@@ -1,8 +1,9 @@
 from kivy.properties import StringProperty
 from kivy.uix.screenmanager import Screen
 from threading import Timer
-from services import connect_to_arduino
+from services import connect_to_arduino, print_label
 
+serialConnection = None
 try:
     serialConnection = connect_to_arduino('/dev/ttyUSB0')
 except Exception as E:
