@@ -46,4 +46,4 @@ def print_label(value):
 
 
 def shut_down_rasp():
-    os.system('sudo shutdown now')
+    os.system('sudo shutdown -h now')
