@@ -43,3 +43,7 @@ def print_label(value):
         print("Failed to print")
         print(E)
         pass
+
+
+def shut_down_rasp():
+    os.system('sudo shutdown now')

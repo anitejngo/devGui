@@ -1,7 +1,13 @@
 from kivy.properties import StringProperty
 from kivy.uix.screenmanager import Screen
 from threading import Timer
-from services import connect_to_arduino, print_label
+from services import connect_to_arduino, print_label, shut_down_rasp
+from kivy.uix.popup import Popup
+
+
+class ShutDownPopup(Popup):
+    pass
+
 
 serialConnection = None
 try:
@@ -16,6 +22,15 @@ except Exception as E:
 class MainScreen(Screen):
     output_label = StringProperty("0")
     last_cut = StringProperty("0")
+
+    def open_shut_down_popup(self):
+        popup = ShutDownPopup()
+        popup.open()
+        pass
+
+    def shut_down(self):
+        shut_down_rasp()
+        pass
 
     def button_call_back(self, value):
         if value == '<':

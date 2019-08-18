@@ -25,40 +25,44 @@ ScreenManagement:
             GridLayout:
                 rows:2
                 size_hint_y:1
-                GridLayout:
-                    cols:2
-                    size_hint_y:1
-                    padding:[0,0,0,40]
-                    Button:
-                        background_color: (0, 0, 0, 1.0)
-                        on_press: root.manager.current = 'list'
-                        Image:
-                            source: 'assets/list.png'
-                            y: self.parent.y + (self.parent.height/2) - 20
-                            x: self.parent.x + (self.parent.width/2) - 20
-                            size: 40, 40
-                            allow_stretch: True
-                    Button:
-                        background_color: (0, 0, 0, 1.0)
-                        on_press: root.manager.current = 'offset'
-                        Image:
-                            source: 'assets/measure.png'
-                            y: self.parent.y + (self.parent.height/2) - 20
-                            x: self.parent.x + (self.parent.width/2) - 20
-                            size: 40, 40
-                            allow_stretch: True
-                    Button:
-                        background_color: (0, 0, 0, 1.0)
+                cols:2
+                Button:
+                    background_color: (0, 0, 0, 1.0)
+                    on_press: root.open_shut_down_popup()
+                    Image:
+                        source: 'assets/shutdown.png'
+                        y: self.parent.y + (self.parent.height/2) - 20
+                        x: self.parent.x + (self.parent.width/2) - 20
+                        size: 40, 40
+                        allow_stretch: True
+                Button:
+                    background_color: (0, 0, 0, 1.0)
+                    on_press: root.manager.current = 'offset'
+                    Image:
+                        source: 'assets/measure.png'
+                        y: self.parent.y + (self.parent.height/2) - 20
+                        x: self.parent.x + (self.parent.width/2) - 20
+                        size: 40, 40
+                        allow_stretch: True
+                Button:
+                    background_color: (0, 0, 0, 1.0)
+                    on_press: root.manager.current = 'list'
+                    Image:
+                        source: 'assets/list.png'
+                        y: self.parent.y + (self.parent.height/2) - 20
+                        x: self.parent.x + (self.parent.width/2) - 20
+                        size: 40, 40
+                        allow_stretch: True
 
-                    Button:
-                        background_color: (0, 0, 0, 1.0)
-                        on_press: root.manager.current = 'settings'
-                        Image:
-                            source: 'assets/settings.png'
-                            y: self.parent.y + (self.parent.height/2) - 20
-                            x: self.parent.x + (self.parent.width/2) - 20
-                            size: 40, 40
-                            allow_stretch: True
+                Button:
+                    background_color: (0, 0, 0, 1.0)
+                    on_press: root.manager.current = 'settings'
+                    Image:
+                        source: 'assets/settings.png'
+                        y: self.parent.y + (self.parent.height/2) - 20
+                        x: self.parent.x + (self.parent.width/2) - 20
+                        size: 40, 40
+                        allow_stretch: True
         GridLayout:
             cols:3
             size_hint_y:2
@@ -130,11 +134,11 @@ ScreenManagement:
             Button:
                 id: start_button
                 bold:'True'
-                font_size: '62'
+                font_size: '54'
                 background_color: (0, 128, 0, 0.5)
                 text:'START'
                 size_hint_y:None
-                height:100
+                height:80
                 on_press: root.start()
 
 <OffsetScreen>:
@@ -288,3 +292,22 @@ ScreenManagement:
     title: 'Internet connection not available'
     Label:
         text: 'Could not update since there is no internet!'
+
+<ShutDownPopup>:
+    id:pop
+    size_hint: .8, .4
+    auto_dismiss: True
+    title: 'SHUTTING DOWN'
+    BoxLayout:
+        orientation:'vertical'
+        Label:
+            text: 'Da li zelite da ugasite urejdaj?'
+        Label:
+            text: '(da li je granicnik vracen na nulu?)'
+
+        Button:
+            background_color: (0, 128, 0, 0.5)
+            text:'UGASI UREDJAJ'
+            size_hint_y:None
+            height:100
+            on_press: root.shut_down()
