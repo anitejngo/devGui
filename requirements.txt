@@ -9,7 +9,7 @@ gitdb2==2.0.5
 GitPython==2.1.11
 idna==2.8
 packbits==0.6
-Pillow==6.1.0
+Pillow==6.2.0
 Pygments==2.3.1
 pyserial==3.4
 pyusb==1.0.2
