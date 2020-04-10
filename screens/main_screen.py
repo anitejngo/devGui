@@ -13,10 +13,16 @@ serialConnection = None
 try:
     serialConnection = connect_to_arduino('/dev/ttyUSB0')
 except Exception as E:
+    print("Could not connect rasp arduino!")
     try:
         serialConnection = connect_to_arduino('/dev/cu.usbserial-A600IP7D')
     except Exception as E:
-        print('Could not find arduino device!')
+        print("Could not connect mac arduino 1")
+
+        try:
+            serialConnection = connect_to_arduino('/dev/cu.usbserial-A4011SC4')
+        except Exception as E:
+            print("Could not connect mac arduino 2")
 
 
 class MainScreen(Screen):
@@ -58,25 +64,32 @@ class MainScreen(Screen):
         self.ids.start_button.disabled = False
 
     def start(self):
-        self.ids.start_button.disabled = True
-        Timer(2, lambda: self.enable_start_button()).start()
-        if serialConnection:
-            value = self.output_label
-            if value is "0":
-                command = "MC 0\r"
-                serialConnection.write(command.encode())
-                self.output_label = "0"
-                self.last_cut = "0"
-            else:
-                last_cut = value
-                value = float(value) - float(self.manager.offset_label)
-                if value > -1:
-                    command = "MC " + str(value) + "\r"
+        try:
+            self.ids.start_button.disabled = True
+            Timer(2, lambda: self.enable_start_button()).start()
+            if serialConnection:
+                value = self.output_label
+                if value is "0":
+                    command = "MC 0\r\n"
                     serialConnection.write(command.encode())
-                    print_label(self.output_label)
                     self.output_label = "0"
-                    self.last_cut = last_cut
+                    self.last_cut = "0"
                 else:
-                    print('Not valid input')
+                    last_cut = value
+                    value = float(value) - float(self.manager.offset_label)
+                    if value > -1:
+                        command = "MC " + str(value) + "\r\n"
+                        serialConnection.write(command.encode())
+                        # printing removed temp
+                        #print_label(self.output_label)
+                        self.output_label = "0"
+                        self.last_cut = last_cut
+                    else:
+                        print('Not valid input')
+            else:
+                print("no serial connection")
+        except Exception as e:
+            print("Serial error")
+            print(e)
 
     pass
