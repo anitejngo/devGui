@@ -20,9 +20,11 @@ class MainScreen(Screen):
     output_label = StringProperty("0")
     last_cut = StringProperty("0")
     serial_connection = BooleanProperty(True if GlobalShared.SERIAL_CONNECTION else False)
+    motor_is_rooted = BooleanProperty(GlobalShared.MOTOR_IS_ROOTED)
 
     def check_connection(self, object):
         self.serial_connection = True if GlobalShared.SERIAL_CONNECTION else False
+        self.motor_is_rooted = GlobalShared.MOTOR_IS_ROOTED
 
     def open_shut_down_popup(self):
         popup = ShutDownPopup()
@@ -58,6 +60,12 @@ class MainScreen(Screen):
     def enable_start_button(self):
         self.ids.start_button.disabled = False
 
+    def root_cutter(self):
+        serial_connection = GlobalShared.SERIAL_CONNECTION
+        command = "CODE:MR \r\n"
+        serial_connection.write(command.encode())
+        print("Sending rooting command")
+
     def start(self):
         serial_connection = GlobalShared.SERIAL_CONNECTION
         try:
@@ -66,7 +74,7 @@ class MainScreen(Screen):
             if serial_connection:
                 value = self.output_label
                 if value is "0":
-                    command = "MC 0\r\n"
+                    command = "CODE:MC 0\r\n"
                     serial_connection.write(command.encode())
                     self.output_label = "0"
                     self.last_cut = "0"
@@ -74,7 +82,7 @@ class MainScreen(Screen):
                     last_cut = value
                     value = float(value) - float(self.manager.offset_label)
                     if value > -1:
-                        command = "MC " + str(value) + "\r\n"
+                        command = "CODE:MC " + str(value) + "\r\n"
                         serial_connection.write(command.encode())
                         # printing removed temp
                         # print_label(self.output_label)

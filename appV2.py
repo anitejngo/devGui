@@ -37,7 +37,6 @@ def connect_to_cutter():
 
 
 class ScreenManagement(ScreenManager):
-    serial_connection = GlobalShared.SERIAL_CONNECTION
     try:
         host_name = os.popen('hostname -I').read()
     except:
@@ -61,11 +60,17 @@ class CutterApp(App):
             try:
                 serial_message = GlobalShared.SERIAL_CONNECTION.readline()  # attempt to read a character from Serial
                 if serial_message:
+                    print("Serial message:")
                     print(serial_message)
+                    if "CODE:MIR" in serial_message:
+                        GlobalShared.MOTOR_IS_ROOTED = True
+
             except:
+                GlobalShared.MOTOR_IS_ROOTED = False
                 GlobalShared.SERIAL_CONNECTION = connect_to_cutter()
 
         else:
+            GlobalShared.MOTOR_IS_ROOTED = False
             GlobalShared.SERIAL_CONNECTION = connect_to_cutter()
 
     def build(self):
