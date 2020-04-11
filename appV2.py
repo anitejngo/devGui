@@ -1,4 +1,6 @@
 import os
+import GlobalShared
+from screens import main_screen, list_screen, offset_screen, settings_screen
 from kivy.lang import Builder
 from kivy.app import App
 from kivy.config import Config
@@ -6,18 +8,36 @@ from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager
 from kivy.properties import StringProperty
 from kivy.storage.jsonstore import JsonStore
-from screens import main_screen, list_screen, offset_screen,settings_screen
+from services import connect_to_arduino
 
 os.environ['KIVY_GL_BACKEND'] = 'gl'
 sm = ScreenManager()
 Config.set('graphics', 'fullscreen', 'auto')
 Config.set('graphics', 'window_state', 'maximized')
-serialConnection = None
 serialBuffer = ''
 store = JsonStore('config.json')
 
 
+def connect_to_cutter():
+    try:
+        return connect_to_arduino('/dev/ttyUSB0')
+    except Exception as E:
+        print("Could not connect rasp arduino!")
+        print(E)
+        try:
+            return connect_to_arduino('/dev/cu.usbserial-A600IP7D')
+        except Exception as E:
+            print("Could not connect mac arduino 1")
+            print(E)
+            try:
+                return connect_to_arduino('/dev/cu.usbserial-A4011SC4')
+            except Exception as E:
+                print(E)
+                print("Could not connect mac arduino 2")
+
+
 class ScreenManagement(ScreenManager):
+    serial_connection = GlobalShared.SERIAL_CONNECTION
     try:
         host_name = os.popen('hostname -I').read()
     except:
@@ -32,30 +52,21 @@ class ScreenManagement(ScreenManager):
 class CutterApp(App):
     def __init__(self, **kwargs):
         super(CutterApp, self).__init__(**kwargs)
+        GlobalShared.SERIAL_CONNECTION = connect_to_cutter()
         refresh_time = 0.5
         Clock.schedule_interval(self.read_serial, refresh_time)
 
     def read_serial(self, object):
-        if serialConnection:
-            while True:
-                c = serialConnection.read()  # attempt to read a character from Serial
-                # was anything read?
-                if len(c) == 0:
-                    break
+        if GlobalShared.SERIAL_CONNECTION:
+            try:
+                serial_message = GlobalShared.SERIAL_CONNECTION.readline()  # attempt to read a character from Serial
+                if serial_message:
+                    print(serial_message)
+            except:
+                GlobalShared.SERIAL_CONNECTION = connect_to_cutter()
 
-                # get the buffer from outside of this function
-                global serialBuffer
-
-                # check if character is a delimeter
-                if c == b'\r':
-                    c = ''  # don't want returns. chuck it
-                if c == b'\n':
-                    serialBuffer += "\n"  # add the newline to the buffer
-
-                    # add the line to the TOP of the log
-                    serialBuffer = ""  # empty the buffer
-                else:
-                    serialBuffer += str(c)[2:-1]  # add to the buffer
+        else:
+            GlobalShared.SERIAL_CONNECTION = connect_to_cutter()
 
     def build(self):
         return Builder.load_file("screens/kivy.kv")

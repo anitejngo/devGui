@@ -1,33 +1,19 @@
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, BooleanProperty
 from kivy.uix.screenmanager import Screen
 from threading import Timer
-from services import connect_to_arduino, print_label, shut_down_rasp
+from services import shut_down_rasp
 from kivy.uix.popup import Popup
+import GlobalShared
 
 
 class ShutDownPopup(Popup):
     pass
 
 
-serialConnection = None
-try:
-    serialConnection = connect_to_arduino('/dev/ttyUSB0')
-except Exception as E:
-    print("Could not connect rasp arduino!")
-    try:
-        serialConnection = connect_to_arduino('/dev/cu.usbserial-A600IP7D')
-    except Exception as E:
-        print("Could not connect mac arduino 1")
-
-        try:
-            serialConnection = connect_to_arduino('/dev/cu.usbserial-A4011SC4')
-        except Exception as E:
-            print("Could not connect mac arduino 2")
-
-
 class MainScreen(Screen):
     output_label = StringProperty("0")
     last_cut = StringProperty("0")
+    serial_connection = BooleanProperty(True)
 
     def open_shut_down_popup(self):
         popup = ShutDownPopup()
@@ -64,14 +50,15 @@ class MainScreen(Screen):
         self.ids.start_button.disabled = False
 
     def start(self):
+        serial_connection = GlobalShared.SERIAL_CONNECTION
         try:
             self.ids.start_button.disabled = True
             Timer(2, lambda: self.enable_start_button()).start()
-            if serialConnection:
+            if serial_connection:
                 value = self.output_label
                 if value is "0":
                     command = "MC 0\r\n"
-                    serialConnection.write(command.encode())
+                    serial_connection.write(command.encode())
                     self.output_label = "0"
                     self.last_cut = "0"
                 else:
@@ -79,9 +66,9 @@ class MainScreen(Screen):
                     value = float(value) - float(self.manager.offset_label)
                     if value > -1:
                         command = "MC " + str(value) + "\r\n"
-                        serialConnection.write(command.encode())
+                        serial_connection.write(command.encode())
                         # printing removed temp
-                        #print_label(self.output_label)
+                        # print_label(self.output_label)
                         self.output_label = "0"
                         self.last_cut = last_cut
                     else:
