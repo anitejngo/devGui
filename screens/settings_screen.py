@@ -4,6 +4,7 @@ import urllib
 from sh import git
 import threading
 from kivy.uix.popup import Popup
+import GlobalShared
 
 
 class NoConnectionPopup(Popup):
@@ -19,6 +20,12 @@ class UpdatingPopup(Popup):
 
 
 class SettingsScreen(Screen):
+    def root_motor(self):
+        serial_connection = GlobalShared.SERIAL_CONNECTION
+        command = "CODE:MRM \r\n"
+        serial_connection.write(command.encode())
+        print("Sending manual rooting command")
+
     def update(self):
         try:
             data = urllib.urlopen("https://www.google.com")
