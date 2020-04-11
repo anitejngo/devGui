@@ -3,6 +3,7 @@ from kivy.uix.screenmanager import Screen
 from threading import Timer
 from services import shut_down_rasp
 from kivy.uix.popup import Popup
+from kivy.clock import Clock
 import GlobalShared
 
 
@@ -11,9 +12,17 @@ class ShutDownPopup(Popup):
 
 
 class MainScreen(Screen):
+    def __init__(self, **kwargs):
+        super(MainScreen, self).__init__(**kwargs)
+        refresh_time = 0.5
+        Clock.schedule_interval(self.check_connection, refresh_time)
+
     output_label = StringProperty("0")
     last_cut = StringProperty("0")
-    serial_connection = BooleanProperty(True)
+    serial_connection = BooleanProperty(True if GlobalShared.SERIAL_CONNECTION else False)
+
+    def check_connection(self, object):
+        self.serial_connection = True if GlobalShared.SERIAL_CONNECTION else False
 
     def open_shut_down_popup(self):
         popup = ShutDownPopup()
