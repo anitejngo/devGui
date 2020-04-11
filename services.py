@@ -1,33 +1,21 @@
 from serial import Serial
-import csv
 from PIL import Image, ImageDraw, ImageFont
 import os
 
+usb_devices = ["/dev/ttyUSB0", "/dev/cu.usbserial-A600IP7D", "/dev/cu.usbserial-A4011SC4"]
 
-def connect_to_arduino(serial_port):
+
+def connect_to_cutter():
+    for usb_device in usb_devices:
+        try:
+            return open_serial_to_cutter(usb_device)
+        except Exception as E:
+            print("Could not connect to:" + usb_device)
+            print(E)
+
+
+def open_serial_to_cutter(serial_port):
     return Serial(serial_port, 9600, timeout=0, writeTimeout=0)
-
-
-def parse_csv_cutting_list(path_to_csv):
-    input_dict = csv.DictReader(open(path_to_csv))
-    dict_you_want = []
-
-    # remove empty data
-    for data in input_dict:
-        if data['Layout'] not in ['', '#', 'Layout']:
-            dict_you_want.append(data)
-
-    # merge cuttings to
-    layouts = []
-    temp = []
-    for data in dict_you_want:
-        if 'of' in data['Layout']:
-            temp = [data]
-            layouts.append(temp)
-        else:
-            temp.append(data)
-
-    return layouts
 
 
 def print_label(value):

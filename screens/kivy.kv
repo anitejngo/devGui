@@ -3,7 +3,6 @@
 ScreenManagement:
     MainScreen:
     OffsetScreen:
-    ListScreen:
     SettingsScreen:
 
 <MainScreen>:
@@ -23,33 +22,15 @@ ScreenManagement:
                 font_size:'30sp'
 
             GridLayout:
-                rows:2
+                rows:1
                 size_hint_y:1
-                cols:2
-                Button:
-                    background_color: (0, 0, 0, 1.0)
-                    on_press: root.open_shut_down_popup()
-                    Image:
-                        source: 'assets/shutdown.png'
-                        y: self.parent.y + (self.parent.height/2) - 20
-                        x: self.parent.x + (self.parent.width/2) - 20
-                        size: 40, 40
-                        allow_stretch: True
+                cols:3
+
                 Button:
                     background_color: (0, 0, 0, 1.0)
                     on_press: root.manager.current = 'offset'
                     Image:
                         source: 'assets/measure.png'
-                        y: self.parent.y + (self.parent.height/2) - 20
-                        x: self.parent.x + (self.parent.width/2) - 20
-                        size: 40, 40
-                        allow_stretch: True
-                Button:
-                    background_color: (0, 0, 0, 1.0)
-
-                    on_press: root.manager.current = 'list'
-                    Image:
-                        source: 'assets/connected.png' if root.serial_connection else 'assets/disconnected.png'
                         y: self.parent.y + (self.parent.height/2) - 20
                         x: self.parent.x + (self.parent.width/2) - 20
                         size: 40, 40
@@ -60,6 +41,16 @@ ScreenManagement:
                     on_press: root.manager.current = 'settings'
                     Image:
                         source: 'assets/settings.png'
+                        y: self.parent.y + (self.parent.height/2) - 20
+                        x: self.parent.x + (self.parent.width/2) - 20
+                        size: 40, 40
+                        allow_stretch: True
+
+                Button:
+                    background_color: (0, 0, 0, 1.0)
+                    on_press: root.open_shut_down_popup()
+                    Image:
+                        source: 'assets/shutdown.png'
                         y: self.parent.y + (self.parent.height/2) - 20
                         x: self.parent.x + (self.parent.width/2) - 20
                         size: 40, 40
@@ -243,24 +234,6 @@ ScreenManagement:
                 size_hint_y:None
                 height:100
                 on_press: root.save()
-
-
-<ListScreen>:
-    name: "list"
-    BoxLayout:
-        orientation:'vertical'
-        Button:
-            background_color: (0, 128, 0, 0.5)
-            text:'read csv'
-            size_hint_y:None
-            height:100
-            on_press: root.read_file()
-        BoxLayout:
-            orientation:'horizontal'
-            Label:
-                size_hint_y:None
-                text:root.manager.host_name
-                font_size:'20sp'
 
 
 <SettingsScreen>:
