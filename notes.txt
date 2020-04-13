@@ -27,6 +27,7 @@ After=network.target
 
 [Service]
 Type=simple
+Environment=DISPLAY=:0
 ExecStart=/usr/bin/python appV2.py
 WorkingDirectory=/home/pi/devGui/
 User=pi

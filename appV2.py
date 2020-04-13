@@ -14,6 +14,7 @@ os.environ['KIVY_GL_BACKEND'] = 'gl'
 sm = ScreenManager()
 Config.set('graphics', 'fullscreen', 'auto')
 Config.set('graphics', 'window_state', 'maximized')
+Config.write()
 serialBuffer = ''
 store = JsonStore('config.json')
 
