@@ -5,6 +5,7 @@ from services import shut_down_rasp
 from kivy.uix.popup import Popup
 from kivy.clock import Clock
 import GlobalShared
+from services import construct_serial_message
 
 
 class ShutDownPopup(Popup):
@@ -62,8 +63,7 @@ class MainScreen(Screen):
 
     def root_cutter(self):
         serial_connection = GlobalShared.SERIAL_CONNECTION
-        command = "CODE:MR \r\n"
-        serial_connection.write(command.encode())
+        serial_connection.write(construct_serial_message('CODE:MR'))
         print("Sending rooting command")
 
     def start(self):
@@ -74,18 +74,14 @@ class MainScreen(Screen):
             if serial_connection:
                 value = self.output_label
                 if value is "0":
-                    command = "CODE:MC 0\r\n"
-                    serial_connection.write(command.encode())
+                    serial_connection.write(construct_serial_message('CODE:MC 0'))
                     self.output_label = "0"
                     self.last_cut = "0"
                 else:
                     last_cut = value
                     value = float(value) - float(self.manager.offset_label)
                     if value > -1:
-                        command = "CODE:MC " + str(value) + "\r\n"
-                        serial_connection.write(command.encode())
-                        # printing removed temp
-                        # print_label(self.output_label)
+                        serial_connection.write(construct_serial_message("CODE:MC " + str(value)))
                         self.output_label = "0"
                         self.last_cut = last_cut
                     else:

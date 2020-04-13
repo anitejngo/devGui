@@ -2,7 +2,7 @@ from serial import Serial
 from PIL import Image, ImageDraw, ImageFont
 import os
 
-usb_devices = ["/dev/ttyUSB0", "/dev/cu.usbserial-A600IP7D", "/dev/cu.usbserial-A4011SC4"]
+usb_devices = ["/dev/ttyUSB0", "/dev/cu.usbserial-A600IP7D", "/dev/cu.usbserial-A4011SC4", "/dev/cu.usbmodem14101"]
 
 
 def connect_to_cutter():
@@ -16,6 +16,10 @@ def connect_to_cutter():
 
 def open_serial_to_cutter(serial_port):
     return Serial(serial_port, 9600, timeout=0, writeTimeout=0)
+
+
+def construct_serial_message(message):
+    return (message + ' \r\n').encode()
 
 
 def print_label(value):

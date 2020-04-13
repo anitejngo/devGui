@@ -139,9 +139,10 @@ ScreenManagement:
                 bold:'True'
                 font_size: '54'
                 background_color: (0, 128, 0, 0.5)
-                text:'START'  if root.motor_is_rooted else "ROOT CUTTER !!!"
+                text:'GO'  if root.motor_is_rooted else "ROOT CUTTER POSITION"
                 size_hint_y:None
                 height:80
+                disabled: not root.serial_connection
                 on_press: root.start() if root.motor_is_rooted else root.root_cutter()
 
 
