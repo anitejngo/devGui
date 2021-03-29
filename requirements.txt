@@ -10,7 +10,7 @@ GitPython==2.1.11
 idna==2.8
 packbits==0.6
 Pillow==6.1.0
-Pygments==2.3.1
+Pygments==2.7.4
 pyserial==3.4
 pyusb==1.0.2
 requests==2.21.0
