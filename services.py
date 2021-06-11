@@ -4,8 +4,23 @@ import os
 
 usb_devices = ["/dev/ttyUSB0", "/dev/cu.usbserial-A600IP7D", "/dev/cu.usbserial-A4011SC4", "/dev/cu.usbmodem14101"]
 
+def getArduinos():
+    import serial.tools.list_ports
+    ports = list(serial.tools.list_ports.comports())
+    arduinos = []
+    for p in ports:
+        if "Arduino" in p.description:
+        arduinos.append(p)
 
 def connect_to_cutter():
+
+    ard = getArduinos()
+    print("=================")
+    print("=================")
+    print("=================")
+    print("=================")
+    print(ard)
+
     for usb_device in usb_devices:
         try:
             return open_serial_to_cutter(usb_device)
