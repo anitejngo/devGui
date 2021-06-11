@@ -47,9 +47,10 @@ class CutterApp(App):
                     if "CODE:MIR" in serial_message:
                         GlobalShared.MOTOR_IS_ROOTED = True
 
-            except:
+            except Exception as E:
                 print("---------------------")
                 print("Failed to read serial port msg")
+                print(E)
                 print("---------------------")
                 GlobalShared.MOTOR_IS_ROOTED = False
                 GlobalShared.SERIAL_CONNECTION = connect_to_cutter()
