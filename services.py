@@ -7,7 +7,12 @@ def getArduinos():
     return "/dev/"+os.popen("dmesg | egrep ttyACM | cut -f3 -d: | tail -n1").read().strip() 
 
 def connect_to_cutter():
-    for usb_device in getArduinos():
+
+    arduinos = getArduinos()
+    print("=======")
+    print(arduinos)
+
+    for usb_device in []:
         try:
             return open_serial_to_cutter(usb_device)
         except Exception as E:
