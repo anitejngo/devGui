@@ -43,7 +43,7 @@ class CutterApp(App):
             try:
                 serial_message = GlobalShared.SERIAL_CONNECTION.readline()
                 if serial_message:
-                    print("Serial message: " + serial_message)
+                    print("Serial message: " + str(serial_message))
                     if "CODE:MIR" in serial_message:
                         GlobalShared.MOTOR_IS_ROOTED = True
 
