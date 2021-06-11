@@ -31,6 +31,10 @@ class CutterApp(App):
     def __init__(self, **kwargs):
         super(CutterApp, self).__init__(**kwargs)
         GlobalShared.SERIAL_CONNECTION = connect_to_cutter()
+        print("-----------")
+        print("Connected to:")
+        print(GlobalShared.SERIAL_CONNECTION)
+        
         refresh_time = 0.5
         Clock.schedule_interval(self.read_serial, refresh_time)
 
