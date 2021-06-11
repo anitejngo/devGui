@@ -3,21 +3,15 @@ from PIL import Image, ImageDraw, ImageFont
 import os
 import serial.tools.list_ports
 
-def getArduinos():
+def getArduino():
     return "/dev/"+os.popen("dmesg | egrep ttyACM | cut -f3 -d: | tail -n1").read().strip() 
 
 def connect_to_cutter():
-
-    arduinos = getArduinos()
-    print("=======")
-    print(arduinos)
-
-    for usb_device in []:
-        try:
-            return open_serial_to_cutter(usb_device)
-        except Exception as E:
-            print("Could not connect to:" + usb_device)
-            print(E)
+    try:
+        return open_serial_to_cutter(getArduino())
+    except Exception as E:
+        print("Could not connect to:" + usb_device)
+        print(E)
 
 
 def open_serial_to_cutter(serial_port):
