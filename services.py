@@ -6,11 +6,7 @@ import serial.tools.list_ports
 usb_devices = ["/dev/ttyUSB0", "/dev/cu.usbserial-A600IP7D", "/dev/cu.usbserial-A4011SC4", "/dev/cu.usbmodem14101"]
 
 def getArduinos():
-    ports = list(serial.tools.list_ports.comports())
-    arduinos = []
-    for p in ports:
-        if "Arduino" in p.description:
-            arduinos.append(p)
+    return "/dev/"+os.popen("dmesg | egrep ttyACM | cut -f3 -d: | tail -n1").read().strip() 
 
 def connect_to_cutter():
 
