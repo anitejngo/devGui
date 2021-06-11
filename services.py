@@ -9,6 +9,9 @@ def getArduino():
 def connect_to_cutter():
     try:
         usb_device=getArduino()
+        print("============= FOUND USB DEVICE")
+        print(usb_device)
+        print("=============")
         return open_serial_to_cutter(usb_device)
     except Exception as E:
         print("Could not connect to:" + usb_device)
