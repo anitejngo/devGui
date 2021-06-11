@@ -3,21 +3,11 @@ from PIL import Image, ImageDraw, ImageFont
 import os
 import serial.tools.list_ports
 
-usb_devices = ["/dev/ttyUSB0", "/dev/cu.usbserial-A600IP7D", "/dev/cu.usbserial-A4011SC4", "/dev/cu.usbmodem14101"]
-
 def getArduinos():
     return "/dev/"+os.popen("dmesg | egrep ttyACM | cut -f3 -d: | tail -n1").read().strip() 
 
 def connect_to_cutter():
-
-    ard = getArduinos()
-    print("=================")
-    print("=================")
-    print("=================")
-    print("=================")
-    print(ard)
-
-    for usb_device in usb_devices:
+    for usb_device in getArduinos():
         try:
             return open_serial_to_cutter(usb_device)
         except Exception as E:
