@@ -48,6 +48,9 @@ class CutterApp(App):
                         GlobalShared.MOTOR_IS_ROOTED = True
 
             except:
+                print("---------------------")
+                print("Failed to read serial port msg")
+                print("---------------------")
                 GlobalShared.MOTOR_IS_ROOTED = False
                 GlobalShared.SERIAL_CONNECTION = connect_to_cutter()
 
