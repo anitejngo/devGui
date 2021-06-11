@@ -35,13 +35,13 @@ class CutterApp(App):
         print("Connected to:")
         print(GlobalShared.SERIAL_CONNECTION)
         
-        refresh_time = 0.5
+        refresh_time = 1
         Clock.schedule_interval(self.read_serial, refresh_time)
 
     def read_serial(self, object):
         if GlobalShared.SERIAL_CONNECTION:
             try:
-                serial_message = GlobalShared.SERIAL_CONNECTION.readline()
+                serial_message = str(GlobalShared.SERIAL_CONNECTION.readline())
                 if serial_message:
                     print("Serial message: " + serial_message)
                     if "CODE:MIR" in serial_message:
