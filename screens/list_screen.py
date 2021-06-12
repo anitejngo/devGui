@@ -9,6 +9,7 @@ import GlobalShared
 from services import construct_serial_message, print_label, on_windows
 import csv
 import os
+import shortuuid
 
 #[{"id": "1", "value":"100"},{'id': "2", "value":"200"},{'id': "3", "value":"300"}]
 measurements = []
@@ -52,7 +53,7 @@ class ListScreen(Screen):
                         length = row['Length']   
                         repeat = row["Repeat"]
                         for x in range(int(repeat)):
-                            measurements.append({"id": str(index),"value": str(length)})
+                            measurements.append({"id": str(shortuuid.uuid()),"value": str(length)})
           
             
         except Exception as e:

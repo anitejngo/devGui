@@ -8,7 +8,8 @@ def getArduino():
     if on_windows():
         return("COM4")
     else:
-        return "/dev/"+os.popen("dmesg | egrep ttyACM | cut -f3 -d: | tail -n1").read().strip() 
+        return "/dev/ttyUSB0"
+        #return "/dev/"+os.popen("dmesg | egrep ttyACM | cut -f3 -d: | tail -n1").read().strip() 
 
 def connect_to_cutter():
     try:
