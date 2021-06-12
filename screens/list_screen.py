@@ -94,7 +94,7 @@ class RVMeasurements(RecycleView):
                 value = float(LATEST_CUT["value"]) - float(OFFSET)
                 if value > -1:
                     serial_connection.write(construct_serial_message("CODE:MC " + str(value)))
-                    print_label(str(value))
+                    print_label(str(LATEST_CUT["value"]))
                 else:
                     print('Not valid input')
         else:
