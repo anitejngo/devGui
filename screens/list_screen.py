@@ -4,6 +4,7 @@ from kivy.properties import StringProperty
 from functools import partial
 from kivy.clock import Clock
 import socket
+from subprocess import check_output
 import GlobalShared
 from services import construct_serial_message, print_label, on_windows
 import csv
@@ -30,7 +31,7 @@ class ListScreen(Screen):
         if on_windows():
             self.host_name = socket.gethostbyname(socket.gethostname())
         else:
-            self.host_name = socket.gethostname()
+            self.host_name = check_output(['hostname', '-I'])
 
     def loadFile(self):
         global measurements
@@ -40,7 +41,7 @@ class ListScreen(Screen):
             if on_windows():
                 file_location = 'orders\stok.csv'
             else:
-                file_location = './orders/stock.csv'
+                file_location = '../orders/stock.csv'
 
             with open(file_location, "r") as f:
                 reader = csv.DictReader(f, delimiter=",")
