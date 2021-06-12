@@ -28,12 +28,23 @@ class ListScreen(Screen):
         OFFSET = self.manager.offset_label
         self.last_list_cut =  str(LATEST_CUT["value"])
         self.host_name = socket.gethostbyname(socket.gethostname())
-    
+
+    def loadFile(self):
+        print("LOAD")
+        global measurements
+        measurements = [{"id": "1", "value":"100"},{'id': "2", "value":"200"},{'id': "3", "value":"300"}]
+        pass
+
 
 
 class RVMeasurements(RecycleView):
     def __init__(self, **kwargs):
         super(RVMeasurements, self).__init__(**kwargs)
+        Clock.schedule_interval(self.refresh_data, 1)
+        self.genData(measurements)
+
+    def refresh_data(self,object):
+        global measurements
         self.genData(measurements)
 
     def genData(self, data):
@@ -49,10 +60,9 @@ class RVMeasurements(RecycleView):
                 newVal = x
                 newVal['done']='DONE'
                 measurements[n] = newVal
-        self.genData(measurements)
         serial_connection = GlobalShared.SERIAL_CONNECTION
         if serial_connection:
-            if LATEST_CUT is "0":
+            if LATEST_CUT['value'] is "0":
                 serial_connection.write(construct_serial_message('CODE:MC 0'))
             else:
                 value = float(LATEST_CUT["value"]) - float(OFFSET)
