@@ -11,7 +11,6 @@ import csv
 import os
 import shortuuid
 
-#[{"id": "1", "value":"100"},{'id': "2", "value":"200"},{'id': "3", "value":"300"}]
 measurements = []
 LATEST_CUT = {"id": "" ,"value":""}
 OFFSET= '0'
@@ -37,6 +36,8 @@ class ListScreen(Screen):
 
     def loadFile(self):
         global measurements
+        global LATEST_CUT
+        LATEST_CUT = {"id": "" ,"value":""}
         measurements = []
         try:
             temp_measures = []

@@ -10,18 +10,20 @@ from kivy.properties import StringProperty
 from kivy.storage.jsonstore import JsonStore
 from services import connect_to_cutter, on_windows
 
-
 if on_windows():
     os.environ['KIVY_GL_BACKEND'] = 'angle_sdl2'
-    Config.set('graphics', 'multisamples', '0')
     Config.set('graphics','show_cursor','1')
+    Config.set('graphics', 'width', '800')
+    Config.set('graphics', 'height', '600')
+    Config.set('graphics', 'fullscreen', '0')
 else:
     os.environ['KIVY_GL_BACKEND'] = 'gl'
     Config.set('graphics','show_cursor','0')
+    Config.set('graphics', 'fullscreen', 'auto')
+    Config.set('graphics', 'window_state', 'maximized')
 
 sm = ScreenManager()
-Config.set('graphics', 'fullscreen', 'auto')
-Config.set('graphics', 'window_state', 'maximized')
+
 Config.write()
 serialBuffer = ''
 store = JsonStore('config.json')

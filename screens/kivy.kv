@@ -277,38 +277,43 @@ ScreenManagement:
     name: "list"
     BoxLayout:
         orientation: "vertical"
-        spacing: 40
-        BoxLayout:
-            size_hint : (1,1)
-            orientation: "horizontal"
-            
-            Button:
-                text: 'Back'
-                size_hint: None, None
-                size: 150, 50
-                on_press: root.manager.current = 'main'
-            
-            Label:
-                size_hint : (1,1)
-                text:root.last_list_cut
-                font_size:'40sp'
-            
-            Label:
-                size_hint : (1,1)
-                text:root.host_name 
-
-            Button:
-                text: 'Load File'
-                size_hint: None, None
-                size: 150, 50
-                on_press: root.loadFile()
+        spacing: 0
+        Label:
+            text:root.host_name 
+            font_size: 12
 
         BoxLayout:
-            orientation: "horizontal"
-            size_hint: (1,12)
-            spacing: 200
-            RVMeasurements:
-                spacing: 60
+            orientation: "vertical"
+            spacing: 40
+            size_hint : (1,18)
+        
+            BoxLayout:
+                size_hint : (1,1)
+                orientation: "horizontal"
+                
+                Button:
+                    text: 'Back'
+                    size_hint: None, None
+                    size: 150, 50
+                    on_press: root.manager.current = 'main'
+                
+                Label:
+                    size_hint : (1,1)
+                    text:root.last_list_cut
+                    font_size:'40sp'
+                        
+                Button:
+                    text: 'Load File'
+                    size_hint: None, None
+                    size: 150, 50
+                    on_press: root.loadFile()
+
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint: (1,12)
+                spacing: 200
+                RVMeasurements:
+                    spacing: 60
       
        
 <RVMeasurements>:
