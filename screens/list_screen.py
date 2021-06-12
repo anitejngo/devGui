@@ -5,7 +5,7 @@ from functools import partial
 from kivy.clock import Clock
 import socket
 import GlobalShared
-from services import construct_serial_message, print_label
+from services import construct_serial_message, print_label, on_windows
 import csv
 
 #[{"id": "1", "value":"100"},{'id': "2", "value":"200"},{'id': "3", "value":"300"}]
@@ -27,7 +27,10 @@ class ListScreen(Screen):
         global OFFSET
         OFFSET = self.manager.offset_label
         self.last_list_cut =  str(LATEST_CUT["value"])
-        self.host_name = socket.gethostbyname(socket.gethostname())
+        if on_windows():
+            self.host_name = socket.gethostbyname(socket.gethostname())
+        else:
+            self.host_name = socket.gethostname()
 
     def loadFile(self):
         global measurements
