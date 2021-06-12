@@ -33,7 +33,13 @@ class ListScreen(Screen):
         global measurements
         try:
             temp_measures = []
-            with open("orders\stok.csv", "r") as f:
+            file_location = ''
+            if on_windows():
+                file_location = 'orders\stok.csv'
+            else:
+                file_location = './orders/stock.csv'
+
+            with open(file_location, "r") as f:
                 reader = csv.DictReader(f, delimiter=",")
                 for index, row in enumerate(reader):
                     if row["Length"] and row["Length"] != 'Length' and not "x" in row["Repeat"]:
@@ -41,6 +47,7 @@ class ListScreen(Screen):
                         repeat = row["Repeat"]
                         for x in range(int(repeat)):
                             measurements.append({"id": str(index),"value": str(length)})
+          
             
         except Exception as e:
             print("Fail to open csv")
