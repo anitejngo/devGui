@@ -36,6 +36,7 @@ class ListScreen(Screen):
 
     def loadFile(self):
         global measurements
+        measurements = []
         try:
             temp_measures = []
             file_location = ''
