@@ -55,9 +55,8 @@ class ListScreen(Screen):
                         measurements.append({"id": str(shortuuid.uuid()),"value": str(length)+" - "+str(repeat), 'layout':True})
                         layaout_repet = repeat[:-1]
                     if row["Length"] and row["Length"] != 'Length' and not "x" in row["Repeat"]:
-                        for y in range(int(layaout_repet)):
-                            for x in range(int(repeat)):
-                                measurements.append({"id": str(shortuuid.uuid()),"value": str(length)})
+                        for x in range(int(repeat)):
+                            measurements.append({"id": str(shortuuid.uuid()),"value": str(length)})
           
             
         except Exception as e:
