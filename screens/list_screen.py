@@ -31,7 +31,7 @@ class ListScreen(Screen):
         if on_windows():
             self.host_name = socket.gethostbyname(socket.gethostname())
         else:
-            self.host_name = check_output(['hostname', '-I'])
+            self.host_name = str(check_output(['hostname', '-I']))
 
     def loadFile(self):
         global measurements
@@ -41,7 +41,7 @@ class ListScreen(Screen):
             if on_windows():
                 file_location = 'orders\stok.csv'
             else:
-                file_location = '../orders/stock.csv'
+                file_location = '../orders/stok.csv'
 
             with open(file_location, "r") as f:
                 reader = csv.DictReader(f, delimiter=",")
