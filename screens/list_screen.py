@@ -70,7 +70,6 @@ class RVMeasurements(RecycleView):
 
     def refresh_data(self,object):
         global measurements
-        print(measurements)
         self.genData(measurements)
 
     def genData(self, data):
