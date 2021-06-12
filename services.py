@@ -34,12 +34,19 @@ def construct_serial_message(message):
 def print_label(value):
     try:
         filename = 'label.png'
-        fnt = ImageFont.truetype('/assets/Lato-Regular.ttf', 200)
-        img = Image.new('RGB', (696, 271), color=(255, 255, 255))
+        if on_windows():
+            fnt = ImageFont.truetype('assets/Lato-Regular.ttf', 140)
+        else:
+            fnt = ImageFont.truetype('/assets/Lato-Regular.ttf', 140)
+        img = Image.new('RGB', (696, 160), color=(255, 255, 255))
         d = ImageDraw.Draw(img)
         d.text((10, 0), value, font=fnt, fill=(0, 0, 0))
         img.save(filename)
-        os.system('sudo brother_ql -p usb://0x04f9:0x2042 -b pyusb --model QL-700 print -l 62x29 label.png')
+        command = "brother_ql -p usb://0x04f9:0x2042 -b pyusb --model QL-700 print -l 62 label.png"
+        if on_windows():
+            os.system(command)
+        else:
+             os.system('sudo '+ command)
     except Exception as E:
         print("Failed to print")
         print(E)
