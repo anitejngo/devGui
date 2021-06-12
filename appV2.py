@@ -1,6 +1,6 @@
 import os
 import GlobalShared
-from screens import main_screen, offset_screen, settings_screen
+from screens import main_screen, offset_screen, settings_screen, list_screen
 from kivy.lang import Builder
 from kivy.app import App
 from kivy.config import Config
@@ -8,13 +8,20 @@ from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager
 from kivy.properties import StringProperty
 from kivy.storage.jsonstore import JsonStore
-from services import connect_to_cutter
+from services import connect_to_cutter, on_windows
 
-os.environ['KIVY_GL_BACKEND'] = 'gl'
+
+if on_windows():
+    os.environ['KIVY_GL_BACKEND'] = 'angle_sdl2'
+    Config.set('graphics', 'multisamples', '0')
+    Config.set('graphics','show_cursor','1')
+else:
+    os.environ['KIVY_GL_BACKEND'] = 'gl'
+    Config.set('graphics','show_cursor','0')
+
 sm = ScreenManager()
 Config.set('graphics', 'fullscreen', 'auto')
 Config.set('graphics', 'window_state', 'maximized')
-Config.set('graphics','show_cursor','0')
 Config.write()
 serialBuffer = ''
 store = JsonStore('config.json')
@@ -36,8 +43,7 @@ class CutterApp(App):
         print("Connected to:")
         print(GlobalShared.SERIAL_CONNECTION)
         
-        refresh_time = 1
-        Clock.schedule_interval(self.read_serial, refresh_time)
+        Clock.schedule_interval(self.read_serial, 1)
 
     def read_serial(self, object):
         if GlobalShared.SERIAL_CONNECTION:

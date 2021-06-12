@@ -4,6 +4,7 @@ ScreenManagement:
     MainScreen:
     OffsetScreen:
     SettingsScreen:
+    ListScreen:
 
 <MainScreen>:
     name: "main"
@@ -24,8 +25,18 @@ ScreenManagement:
             GridLayout:
                 rows:1
                 size_hint_y:1
-                cols:3
+                cols:4
 
+                Button:
+                    background_color: (0, 0, 0, 1.0)
+                    on_press: root.manager.current = 'list'
+                    Image:
+                        source: 'assets/list.png'
+                        y: self.parent.y + (self.parent.height/2) - 20
+                        x: self.parent.x + (self.parent.width/2) - 20
+                        size: 40, 40
+                        allow_stretch: True
+                
                 Button:
                     background_color: (0, 0, 0, 1.0)
                     on_press: root.manager.current = 'offset'
@@ -261,6 +272,56 @@ ScreenManagement:
             height:100
             on_press: root.manager.current = 'main'
 
+
+<ListScreen>:
+    name: "list"
+    BoxLayout:
+        orientation: "vertical"
+        spacing: 40
+        BoxLayout:
+            size_hint : (1,1)
+            orientation: "horizontal"
+            
+            Button:
+                text: 'Back'
+                size_hint: None, None
+                size: 150, 50
+                on_press: root.manager.current = 'main'
+            
+            Label:
+                size_hint : (6,1)
+                text:root.last_list_cut
+                font_size:'30sp'
+            
+            Label:
+                size_hint : (1,1)
+                text:root.host_name 
+
+            Button:
+                text: 'Load File'
+                size_hint: None, None
+                size: 150, 50
+                on_press: root.manager.current = 'main'
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint: (1,12)
+            spacing: 200
+            RVMeasurements:
+                spacing: 60
+      
+       
+<RVMeasurements>:
+    viewclass: 'Button'
+    RecycleBoxLayout:
+        default_size: None, dp(56)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
+        multiselect: True
+        touch_multiselect: True
+        spacing:60
 
 <NoUpdatesPopup>:
     id:pop

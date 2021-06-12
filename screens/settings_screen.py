@@ -1,7 +1,7 @@
 from kivy.uix.screenmanager import Screen
 import os
 import urllib
-from sh import git
+#from sh import git
 import threading
 from kivy.uix.popup import Popup
 import GlobalShared
@@ -27,6 +27,7 @@ class SettingsScreen(Screen):
         print("Sending manual rooting command")
 
     def update(self):
+        '''
         try:
             data = urllib.urlopen("https://www.google.com")
         except Exception as e:
@@ -37,7 +38,7 @@ class SettingsScreen(Screen):
         try:
             update_check = git("pull")
             if "Already up to date." in update_check or "Already up-to-date." in update_check:
-                popup = NoUpdatesPopup()
+               popup = NoUpdatesPopup()
                 popup.open()
             else:
                 popup = UpdatingPopup()
@@ -53,3 +54,4 @@ class SettingsScreen(Screen):
             print(e)
 
         pass
+'''

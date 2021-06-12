@@ -4,7 +4,11 @@ import os
 import serial.tools.list_ports
 
 def getArduino():
-    return "/dev/"+os.popen("dmesg | egrep ttyACM | cut -f3 -d: | tail -n1").read().strip() 
+    
+    if on_windows():
+        return("COM4")
+    else:
+        return "/dev/"+os.popen("dmesg | egrep ttyACM | cut -f3 -d: | tail -n1").read().strip() 
 
 def connect_to_cutter():
     try:
@@ -43,3 +47,9 @@ def print_label(value):
 
 def shut_down_rasp():
     os.system('sudo shutdown -h now')
+
+def on_windows():
+    return os.name == 'nt'
+
+
+
