@@ -49,11 +49,15 @@ class ListScreen(Screen):
             with open(file_location, "r") as f:
                 reader = csv.DictReader(f, delimiter=",")
                 for index, row in enumerate(reader):
+                    length = row['Length']   
+                    repeat = row["Repeat"]
+                    if 'x' in row['Repeat']:
+                        measurements.append({"id": str(shortuuid.uuid()),"value": str(length)+" - "+str(repeat), 'layout':True})
+                        layaout_repet = repeat[:-1]
                     if row["Length"] and row["Length"] != 'Length' and not "x" in row["Repeat"]:
-                        length = row['Length']   
-                        repeat = row["Repeat"]
-                        for x in range(int(repeat)):
-                            measurements.append({"id": str(shortuuid.uuid()),"value": str(length)})
+                        for y in range(int(layaout_repet)):
+                            for x in range(int(repeat)):
+                                measurements.append({"id": str(shortuuid.uuid()),"value": str(length)})
           
             
         except Exception as e:
@@ -75,7 +79,8 @@ class RVMeasurements(RecycleView):
         self.genData(measurements)
 
     def genData(self, data):
-        self.data = [{'text': ("DONE        -       " if "done" in x else "") + str(x["value"]), 'on_release':  partial(self.on_press, x)} for x in data]
+        done = "DONE        -       " 
+        self.data = [{'text': "LAYOUT: "+x["value"] if 'layout' in x else (done if "done" in x else "") + str(x["value"]), 'on_release':  partial(self.on_press, x), 'disabled':True if 'layout' in x else False} for x in data]
 
     def on_press(self,x):
         global LATEST_CUT
