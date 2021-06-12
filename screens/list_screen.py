@@ -8,6 +8,7 @@ from subprocess import check_output
 import GlobalShared
 from services import construct_serial_message, print_label, on_windows
 import csv
+import os
 
 #[{"id": "1", "value":"100"},{'id': "2", "value":"200"},{'id': "3", "value":"300"}]
 measurements = []
@@ -41,7 +42,7 @@ class ListScreen(Screen):
             if on_windows():
                 file_location = 'orders\stok.csv'
             else:
-                file_location = '../orders/stok.csv'
+                file_location = os.path.join(os.pardir,'orders/stok.csv')
 
             with open(file_location, "r") as f:
                 reader = csv.DictReader(f, delimiter=",")

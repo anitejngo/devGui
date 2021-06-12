@@ -82,7 +82,7 @@ class MainScreen(Screen):
                     value = float(value) - float(self.manager.offset_label)
                     if value > -1:
                         serial_connection.write(construct_serial_message("CODE:MC " + str(value)))
-                        print_label(str(value))
+                        print_label(str(last_cut))
                         self.output_label = "0"
                         self.last_cut = last_cut
                     else:
