@@ -42,7 +42,7 @@ class ListScreen(Screen):
             if on_windows():
                 file_location = 'orders\stok.csv'
             else:
-                file_location = os.path.join(os.pardir,'orders/stok.csv')
+                file_location = '~/devGui/orders/stok.csv')
 
             with open(file_location, "r") as f:
                 reader = csv.DictReader(f, delimiter=",")
