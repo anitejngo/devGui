@@ -6,12 +6,12 @@ from kivy.clock import Clock
 import socket
 import GlobalShared
 from services import construct_serial_message, print_label
+import csv
 
 #[{"id": "1", "value":"100"},{'id': "2", "value":"200"},{'id': "3", "value":"300"}]
 measurements = []
 LATEST_CUT = {"id": "" ,"value":""}
 OFFSET= '0'
-
 
 
 class ListScreen(Screen):
@@ -30,9 +30,22 @@ class ListScreen(Screen):
         self.host_name = socket.gethostbyname(socket.gethostname())
 
     def loadFile(self):
-        print("LOAD")
         global measurements
-        measurements = [{"id": "1", "value":"100"},{'id': "2", "value":"200"},{'id': "3", "value":"300"}]
+        try:
+            temp_measures = []
+            with open("orders\stok.csv", "r") as f:
+                reader = csv.DictReader(f, delimiter=",")
+                for index, row in enumerate(reader):
+                    if row["Length"] and row["Length"] != 'Length' and not "x" in row["Repeat"]:
+                        length = row['Length']   
+                        repeat = row["Repeat"]
+                        for x in range(int(repeat)):
+                            measurements.append({"id": str(index),"value": str(length)})
+            
+        except Exception as e:
+            print("Fail to open csv")
+            print(e)
+
         pass
 
 
@@ -45,6 +58,7 @@ class RVMeasurements(RecycleView):
 
     def refresh_data(self,object):
         global measurements
+        print(measurements)
         self.genData(measurements)
 
     def genData(self, data):
