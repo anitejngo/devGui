@@ -17,7 +17,7 @@ measurements = []
 LATEST_CUT = {"id": "" ,"value":""}
 OFFSET= '0'
 FILE_PATH = ''
-
+TEMP_FILE_PATH = ""
 
 class ListScreen(Screen):
     def __init__(self, **kwargs):
@@ -111,8 +111,8 @@ class RVMeasurements(RecycleView):
 class Filechooser(BoxLayout):
     def select(self, *args):
         try: 
-            global FILE_PATH
-            FILE_PATH = args[1][0]
+            global TEMP_FILE_PATH
+            TEMP_FILE_PATH = args[1][0]
         except: pass      
 
         
@@ -123,6 +123,8 @@ class OpenFilePopup(Popup):
     
     def consume_file(self):
         global FILE_PATH
+        global TEMP_FILE_PATH
+        FILE_PATH = TEMP_FILE_PATH
         self.list_screen.calculate_from_csv(self.list_screen)
         self.dismiss()
     
