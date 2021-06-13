@@ -55,7 +55,7 @@ def print_label(value):
 
 def reset_motor_to_root_position():
     serial_connection = GlobalShared.SERIAL_CONNECTION
-    serial_connection.write(construct_serial_message('"CODE:MRM'))
+    serial_connection.write(construct_serial_message('CODE:MRM'))
     print("Sending rooting command")
 
 

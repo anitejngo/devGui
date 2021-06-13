@@ -24,6 +24,7 @@
                 Button:
                     background_color: (0, 0, 0, 1.0)
                     on_press: root.manager.current = 'list'
+                    disabled: False if root.motor_is_rooted else True
                     Image:
                         source: 'assets/list.png'
                         y: self.parent.y + (self.parent.height/2) - 20
