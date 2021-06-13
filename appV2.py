@@ -67,6 +67,11 @@ class CutterApp(App):
             GlobalShared.MOTOR_IS_ROOTED = False
             GlobalShared.SERIAL_CONNECTION = connect_to_cutter()
 
+    def close_app(self):
+        print("Closing app")
+        App.get_running_app().stop()
+
+
     def build(self):
         return Builder.load_file("screens/kivy.kv")
 

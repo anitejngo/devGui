@@ -1,0 +1,41 @@
+#:kivy 1.10.0
+
+<SettingsScreen>:
+    name:"settings"
+    BoxLayout:
+        orientation:'vertical'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: (1, None)
+            height: 60
+    
+            Button:
+                on_press: root.manager.current = 'main'
+                size: 60, 60
+                size_hint: None, None
+                background_color: (0, 0, 0, 1)
+                Image:
+                    source: 'assets/backArrow.png'
+                    y: self.parent.y + (self.parent.height/2) - 30
+                    x: self.parent.x + (self.parent.width/2) - 30
+                    size: 60, 60
+                    allow_stretch: True
+                    
+            Label:
+                text:root.host_name 
+                font_size: 14
+
+        BoxLayout:
+            orientation: "vertical"
+            size_hint: (1,1)
+            padding: [20, 50, 20, 20]
+            Button:
+                background_color: (1, 0, 0, 1)
+                text:'Resetuj poziciju'
+                bold:'True'
+                font_size: '54'
+                size_hint_y:None
+                height:80
+                on_press: root.root_motor()
+        

@@ -1,6 +1,6 @@
 from kivy.uix.screenmanager import Screen
 from kivy.uix.recycleview import RecycleView
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, ObjectProperty
 from functools import partial
 from kivy.clock import Clock
 import socket
@@ -10,10 +10,13 @@ from services import construct_serial_message, print_label, on_windows
 import csv
 import os
 import shortuuid
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.popup import Popup
 
 measurements = []
 LATEST_CUT = {"id": "" ,"value":""}
 OFFSET= '0'
+FILE_PATH = ''
 
 
 class ListScreen(Screen):
@@ -22,32 +25,33 @@ class ListScreen(Screen):
         Clock.schedule_interval(self.update_label, 0.5)
     
     last_list_cut = StringProperty()
-    host_name = StringProperty()
+    file_name = StringProperty()
 
     def update_label(self, object):
         global LATEST_CUT
         global OFFSET
+        global FILE_PATH
+        self.file_name = FILE_PATH.split("\\").pop() if FILE_PATH else "Izaberite Fajl"
         OFFSET = self.manager.offset_label
         self.last_list_cut =  str(LATEST_CUT["value"])
-        if on_windows():
-            self.host_name = socket.gethostbyname(socket.gethostname())
-        else:
-            self.host_name = str(check_output(['hostname', '-I']))
 
+ 
     def loadFile(self):
+        self.open_file_popup()
+
+    def open_file_popup(self):
+        popup = OpenFilePopup(list_screen=ListScreen)
+        popup.open()
+
+    def calculate_from_csv(self):
         global measurements
         global LATEST_CUT
+        global FILE_PATH
         LATEST_CUT = {"id": "" ,"value":""}
         measurements = []
         try:
             temp_measures = []
-            file_location = ''
-            if on_windows():
-                file_location = 'orders\stok.csv'
-            else:
-                file_location = 'orders/stok.csv'
-
-            with open(file_location, "r") as f:
+            with open(FILE_PATH, "r") as f:
                 reader = csv.DictReader(f, delimiter=",")
                 for index, row in enumerate(reader):
                     length = row['Length']   
@@ -58,27 +62,26 @@ class ListScreen(Screen):
                     if row["Length"] and row["Length"] != 'Length' and not "x" in row["Repeat"]:
                         for x in range(int(repeat)):
                             measurements.append({"id": str(shortuuid.uuid()),"value": str(length)})
-          
+            
             
         except Exception as e:
             print("Fail to open csv")
             print(e)
-
-        pass
-
+ 
+   
 
 
 class RVMeasurements(RecycleView):
     def __init__(self, **kwargs):
         super(RVMeasurements, self).__init__(**kwargs)
         Clock.schedule_interval(self.refresh_data, 1)
-        self.genData(measurements)
+        self.gen_data(measurements)
 
     def refresh_data(self,object):
         global measurements
-        self.genData(measurements)
+        self.gen_data(measurements)
 
-    def genData(self, data):
+    def gen_data(self, data):
         done = "DONE        -       " 
         self.data = [{'text': "LAYOUT: "+x["value"] if 'layout' in x else (done if "done" in x else "") + str(x["value"]), 'on_release':  partial(self.on_press, x), 'disabled':True if 'layout' in x else False} for x in data]
 
@@ -94,21 +97,34 @@ class RVMeasurements(RecycleView):
                 measurements[n] = newVal
         serial_connection = GlobalShared.SERIAL_CONNECTION
         if serial_connection:
-            if LATEST_CUT['value'] is "0":
-                serial_connection.write(construct_serial_message('CODE:MC 0'))
+            value = float(LATEST_CUT["value"]) - float(OFFSET)
+            if value > -1:
+                serial_connection.write(construct_serial_message("CODE:MC " + str(value)))
+                print_label(str(LATEST_CUT["value"]))
             else:
-                value = float(LATEST_CUT["value"]) - float(OFFSET)
-                if value > -1:
-                    serial_connection.write(construct_serial_message("CODE:MC " + str(value)))
-                    print_label(str(LATEST_CUT["value"]))
-                else:
-                    print('Not valid input')
+                print('Not valid input')
         else:
             print("no serial connection")
 
-
    
 
-      
+class Filechooser(BoxLayout):
+    def select(self, *args):
+        try: 
+            global FILE_PATH
+            FILE_PATH = args[1][0]
+        except: pass      
 
-
+        
+class OpenFilePopup(Popup):
+    list_screen = ObjectProperty()
+    def __init__(self, **kwargs):
+        super(OpenFilePopup, self).__init__(**kwargs)   
+    
+    def consume_file(self):
+        global FILE_PATH
+        self.list_screen.calculate_from_csv(self.list_screen)
+        self.dismiss()
+    
+    def close(self):
+        self.dismiss()

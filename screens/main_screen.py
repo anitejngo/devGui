@@ -4,12 +4,22 @@ from threading import Timer
 from services import shut_down_rasp
 from kivy.uix.popup import Popup
 from kivy.clock import Clock
+from kivy.core.window import Window
 import GlobalShared
-from services import construct_serial_message, print_label
+from services import construct_serial_message, print_label, reset_motor_to_root_position
 
 
 class ShutDownPopup(Popup):
-    pass
+    def __init__(self, **kwargs):
+        super(ShutDownPopup, self).__init__(**kwargs)   
+        Window.bind(on_request_close=self.shut_down)
+
+    def shut_down(self, *args):
+        shut_down_rasp()   
+        Window.close()      
+    
+    def close(self):
+        self.dismiss()
 
 
 class MainScreen(Screen):
@@ -30,11 +40,6 @@ class MainScreen(Screen):
     def open_shut_down_popup(self):
         popup = ShutDownPopup()
         popup.open()
-        pass
-
-    def shut_down(self):
-        shut_down_rasp()
-        pass
 
     def button_call_back(self, value):
         if value == '<':
@@ -62,9 +67,7 @@ class MainScreen(Screen):
         self.ids.start_button.disabled = False
 
     def root_cutter(self):
-        serial_connection = GlobalShared.SERIAL_CONNECTION
-        serial_connection.write(construct_serial_message('CODE:MR'))
-        print("Sending rooting command")
+        reset_motor_to_root_position()
 
     def start(self):
         serial_connection = GlobalShared.SERIAL_CONNECTION

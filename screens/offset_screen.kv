@@ -1,0 +1,95 @@
+#:kivy 1.10.0
+
+<OffsetScreen>:
+    name: "offset"
+    BoxLayout:
+        orientation:'vertical'
+        BoxLayout:
+            orientation:'horizontal'
+            Label:
+                size_hint_y:1
+                text:"OFFSET:"
+                font_size:'30sp'
+
+            Label:
+                size_hint_y:1
+                text:root.manager.offset_label
+                font_size:'30sp'
+
+        GridLayout:
+            cols:3
+            size_hint_y:2
+            spacing: 4
+            
+            Button:
+                text:'1'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('1')
+            Button:
+                text:'2'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('2')
+            Button:
+                text:'3'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('3')
+            Button:
+                text:'4'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('4')
+            Button:
+                text:'5'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('5')
+            Button:
+                text:'6'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('6')
+            Button:
+                text:'7'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('7')
+            Button:
+                text:'8'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('8')
+            Button:
+                text:'9'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('9')
+            Button:
+                text:'<'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('<')
+            Button:
+                text:'0'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('0')
+            Button:
+                text:'.'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('.')
+
+        BoxLayout:
+            orientation:'horizontal'
+            padding:[20, 50, 20, 20]
+            Button:
+                background_color: (0, 128, 0, 0.5)
+                text:'Sacuvaj izmene'
+                bold:'True'
+                font_size: '54'
+                size_hint_y:None
+                height:80
+                on_press: root.save()

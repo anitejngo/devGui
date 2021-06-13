@@ -1,0 +1,178 @@
+#:kivy 1.10.0
+
+<MainScreen>:
+    name: "main"
+    BoxLayout:
+        orientation:'vertical'
+        BoxLayout:
+            orientation:'horizontal'
+            Label:
+                text:root.output_label
+                size_hint_y:1
+                font_size:'50sp'
+                bold:'True'
+            Label:
+                text:root.last_cut
+                size_hint_y:1
+                font_size:'30sp'
+
+            GridLayout:
+                rows:1
+                size_hint_y:1
+                cols:4
+
+                Button:
+                    background_color: (0, 0, 0, 1.0)
+                    on_press: root.manager.current = 'list'
+                    Image:
+                        source: 'assets/list.png'
+                        y: self.parent.y + (self.parent.height/2) - 20
+                        x: self.parent.x + (self.parent.width/2) - 20
+                        size: 40, 40
+                        allow_stretch: True
+                
+                Button:
+                    background_color: (0, 0, 0, 1.0)
+                    on_press: root.manager.current = 'offset'
+                    Image:
+                        source: 'assets/measure.png'
+                        y: self.parent.y + (self.parent.height/2) - 20
+                        x: self.parent.x + (self.parent.width/2) - 20
+                        size: 40, 40
+                        allow_stretch: True
+
+                Button:
+                    background_color: (0, 0, 0, 1.0)
+                    on_press: root.manager.current = 'settings'
+                    Image:
+                        source: 'assets/settings.png'
+                        y: self.parent.y + (self.parent.height/2) - 20
+                        x: self.parent.x + (self.parent.width/2) - 20
+                        size: 40, 40
+                        allow_stretch: True
+
+                Button:
+                    background_color: (0, 0, 0, 1.0)
+                    on_press: root.open_shut_down_popup()
+                    Image:
+                        source: 'assets/shutdown.png'
+                        y: self.parent.y + (self.parent.height/2) - 20
+                        x: self.parent.x + (self.parent.width/2) - 20
+                        size: 40, 40
+                        allow_stretch: True
+        GridLayout:
+            cols:3
+            size_hint_y:2
+            spacing: 4
+            Button:
+                text:'1'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('1')
+                disabled: not root.motor_is_rooted
+            Button:
+                text:'2'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('2')
+                disabled: not root.motor_is_rooted
+            Button:
+                text:'3'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('3')
+                disabled: not root.motor_is_rooted
+            Button:
+                text:'4'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('4')
+                disabled: not root.motor_is_rooted
+            Button:
+                text:'5'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('5')
+                disabled: not root.motor_is_rooted
+            Button:
+                text:'6'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('6')
+                disabled: not root.motor_is_rooted
+            Button:
+                text:'7'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('7')
+                disabled: not root.motor_is_rooted
+            Button:
+                text:'8'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('8')
+                disabled: not root.motor_is_rooted
+            Button:
+                text:'9'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('9')
+                disabled: not root.motor_is_rooted
+            Button:
+                text:'<'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('<')
+                disabled: not root.motor_is_rooted
+            Button:
+                text:'0'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('0')
+                disabled: not root.motor_is_rooted
+            Button:
+                text:'.'
+                bold:'True'
+                font_size: '62'
+                on_press: root.button_call_back('.')
+                disabled: not root.motor_is_rooted
+
+        BoxLayout:
+            orientation:'horizontal'
+            padding:[20, 50, 20, 20]
+            Button:
+                id: start_button
+                bold:'True'
+                font_size: '54'
+                background_color: (0, 128, 0, 0.5)
+                text:'-->'  if root.motor_is_rooted else "Resetuj poziciju"
+                size_hint_y:None
+                height:80
+                disabled: not root.serial_connection
+                on_press: root.start() if root.motor_is_rooted else root.root_cutter()
+
+<ShutDownPopup>:
+    id:pop
+    size_hint: .8, .4
+    auto_dismiss: True
+    title: ''
+    BoxLayout:
+        orientation:'vertical'
+        padding: 20
+        spacing: 20
+
+        Label:
+            font_size: 20
+            text: 'Da li ste sigurni da zelite ugasiti uredjaj?'
+       
+        BoxLayout:
+            spacing:20
+            Button:
+                background_color: (0, 128, 0, 0.5)
+                text:'Da'
+                on_press: root.shut_down()
+            
+            Button:
+                background_color: (128, 0, 0, 0.5)
+                text:'Otkazi'
+                on_press: root.close()

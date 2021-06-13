@@ -1,0 +1,106 @@
+#:kivy 1.10.0
+
+<ListScreen>:
+    name: "list"
+    BoxLayout:
+        orientation: "vertical"
+        spacing: 10
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: (1, None)
+            height: 60
+    
+            Button:
+                on_press: root.manager.current = 'main'
+                size: 60, 60
+                size_hint: None, None
+                background_color: (0, 0, 0, 1)
+                Image:
+                    source: 'assets/backArrow.png'
+                    y: self.parent.y + (self.parent.height/2) - 30
+                    x: self.parent.x + (self.parent.width/2) - 30
+                    size: 60, 60
+                    allow_stretch: True
+            
+            Label:
+                size_hint : (1,1)
+                text: root.file_name
+                font_size:'20sp'
+
+            Button:
+                on_press: root.loadFile()
+                size: 60, 60
+                size_hint: None, None
+                background_color: (0, 0, 0, 1)
+                Image:
+                    source: 'assets/folder.png'
+                    y: self.parent.y + (self.parent.height/2) - 30
+                    x: self.parent.x + (self.parent.width/2) - 30
+                    size: 60, 60
+                    allow_stretch: True
+        
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: (1, None)
+            height: 60
+    
+            Label:
+                size_hint : (1,1)
+                text:root.last_list_cut
+                font_size:'40sp'
+                color: (0, 128, 0, 1)
+                    
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint: (1,12)
+            spacing: 200
+            RVMeasurements:
+                spacing: 60    
+       
+<RVMeasurements>:
+    viewclass: 'Button'
+    RecycleBoxLayout:
+        default_size: None, dp(56)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
+        multiselect: True
+        touch_multiselect: True
+        spacing:12
+
+
+<OpenFilePopup>:
+    id:pop
+    size_hint: .8, .8
+    auto_dismiss: True
+    title: 'Izaberite fajl'
+    BoxLayout:
+        orientation:'vertical'
+        padding: 20
+        Filechooser:
+            BoxLayout:
+                spacing:20
+                orientation: 'horizontal'
+                size_hint: (1, None)
+                height: 60
+                Button:
+                    background_color: (0, 128, 0, 0.5)
+                    text:'Izaberi fajl'
+                    on_press: root.consume_file()
+                
+                Button:
+                    background_color: (128, 0, 0, 0.5)
+                    text:'Otkazi'
+                    on_press: root.close()
+
+<Filechooser>:
+    orientation: 'vertical'
+    BoxLayout:
+        FileChooserIconView:
+            path: 'orders/'
+            on_selection: root.select(*args)
+
+   
+

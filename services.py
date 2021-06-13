@@ -2,6 +2,7 @@ from serial import Serial
 from PIL import Image, ImageDraw, ImageFont
 import os
 import serial.tools.list_ports
+import GlobalShared
 
 def getArduino():
     
@@ -51,6 +52,11 @@ def print_label(value):
         print("Failed to print")
         print(E)
         pass
+
+def reset_motor_to_root_position():
+    serial_connection = GlobalShared.SERIAL_CONNECTION
+    serial_connection.write(construct_serial_message('"CODE:MRM'))
+    print("Sending rooting command")
 
 
 def shut_down_rasp():
