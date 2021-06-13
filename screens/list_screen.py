@@ -83,7 +83,10 @@ class RVMeasurements(RecycleView):
 
     def gen_data(self, data):
         done = "DONE        -       " 
-        self.data = [{'text': "LAYOUT: "+x["value"] if 'layout' in x else (done if "done" in x else "") + str(x["value"]), 'on_release':  partial(self.on_press, x), 'disabled':True if 'layout' in x else False} for x in data]
+        self.data = [{'text': "LAYOUT: "+x["value"] if 'layout' in x else (done if "done" in x else "") + str(x["value"]), 'on_release':  partial(self.on_press_layout, x) if 'layout' in x else partial(self.on_press,x), 'background_color': (1,0,0,1) if 'layout' in x else (0,1,0,1)} for x in data]
+
+    def on_press_layout(self,x):
+        pass
 
     def on_press(self,x):
         global LATEST_CUT
