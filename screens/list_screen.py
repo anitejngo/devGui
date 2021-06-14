@@ -6,7 +6,7 @@ from kivy.clock import Clock
 import socket
 from subprocess import check_output
 import GlobalShared
-from services import construct_serial_message, print_label, on_windows
+from services import construct_serial_message, print_label, print_label_and_description, on_windows
 import csv
 import os
 import shortuuid
@@ -14,16 +14,17 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 
 measurements = []
-LATEST_CUT = {"id": "" ,"value":""}
-OFFSET= '0'
+LATEST_CUT = {"id": "", "value": ""}
+OFFSET = '0'
 FILE_PATH = ''
 TEMP_FILE_PATH = ""
+
 
 class ListScreen(Screen):
     def __init__(self, **kwargs):
         super(ListScreen, self).__init__(**kwargs)
         Clock.schedule_interval(self.update_label, 0.5)
-    
+
     last_list_cut = StringProperty()
     file_name = StringProperty()
 
@@ -31,11 +32,11 @@ class ListScreen(Screen):
         global LATEST_CUT
         global OFFSET
         global FILE_PATH
-        self.file_name = FILE_PATH.split("\\").pop() if FILE_PATH else "Izaberite Fajl"
+        self.file_name = FILE_PATH.split(
+            "\\").pop() if FILE_PATH else "Izaberite Fajl"
         OFFSET = self.manager.offset_label
-        self.last_list_cut =  str(LATEST_CUT["value"])
+        self.last_list_cut = str(LATEST_CUT["value"])
 
- 
     def loadFile(self):
         self.open_file_popup()
 
@@ -47,28 +48,28 @@ class ListScreen(Screen):
         global measurements
         global LATEST_CUT
         global FILE_PATH
-        LATEST_CUT = {"id": "" ,"value":""}
+        LATEST_CUT = {"id": "", "value": ""}
         measurements = []
         try:
             temp_measures = []
             with open(FILE_PATH, "r") as f:
                 reader = csv.DictReader(f, delimiter=",")
                 for index, row in enumerate(reader):
-                    length = row['Length']   
+                    length = row['Length']
                     repeat = row["Repeat"]
+                    description = row['Description']
                     if 'x' in row['Repeat']:
-                        measurements.append({"id": str(shortuuid.uuid()),"value": str(length)+" - "+str(repeat), 'layout':True})
+                        measurements.append({"id": str(shortuuid.uuid()), "value": str(
+                            length)+" - "+str(repeat), 'layout': True})
                         layaout_repet = repeat[:-1]
                     if row["Length"] and row["Length"] != 'Length' and not "x" in row["Repeat"]:
                         for x in range(int(repeat)):
-                            measurements.append({"id": str(shortuuid.uuid()),"value": str(length)})
-            
-            
+                            measurements.append(
+                                {"id": str(shortuuid.uuid()), "value": str(length), 'description': description})
+
         except Exception as e:
             print("Fail to open csv")
             print(e)
- 
-   
 
 
 class RVMeasurements(RecycleView):
@@ -77,59 +78,86 @@ class RVMeasurements(RecycleView):
         Clock.schedule_interval(self.refresh_data, 1)
         self.gen_data(measurements)
 
-    def refresh_data(self,object):
+    def refresh_data(self, object):
         global measurements
         self.gen_data(measurements)
 
-    def gen_data(self, data):
-        done = "DONE        -       " 
-        self.data = [{'text': "LAYOUT: "+x["value"] if 'layout' in x else (done if "done" in x else "") + str(x["value"]), 'on_release':  partial(self.on_press_layout, x) if 'layout' in x else partial(self.on_press,x), 'background_color': (1,0,0,1) if 'layout' in x else (0,1,0,1)} for x in data]
+    def if_has_property(self, x, property):
+        return property in x
 
-    def on_press_layout(self,x):
+    def genrate_done_message(self):
+        return "DONE        -       "
+
+    def generate_layout_message(self, x):
+        return "LAYOUT: " + x["value"]
+
+    def generate_text(self, x):
+        return self.generate_layout_message(x) if self.if_has_property(x, 'layout') else (self.genrate_done_message() if self.if_has_property(x, 'done') else "") + str(x["value"] + " " + (str(x['description']) if self.if_has_property(x, 'description') else ""))
+
+    def generat_on_release(self, x):
+        return partial(self.on_press_layout, x) if self.if_has_property(x, 'layout') else partial(self.on_press, x)
+
+    def generate_background_color(self, x):
+        return (1, 0, 0, 1) if self.if_has_property(x, 'layout') else (0, 1, 0, 1)
+
+    def generate_description(self, x):
+        return x['description'] if self.if_has_property(x, 'description') else ''
+
+    def gen_data(self, data):
+        self.data = [{'text': self.generate_text(x), 'on_release': self.generat_on_release(
+            x), 'background_color': self.generate_background_color(x), ' ': self.generate_description(x)} for x in data]
+
+    def on_press_layout(self, x):
         pass
 
-    def on_press(self,x):
+    def on_press(self, x):
         global LATEST_CUT
         global OFFSET
-        LATEST_CUT  = x
-        
+        LATEST_CUT = x
+
         for n, i in enumerate(measurements):
             if i['id'] == x['id']:
                 newVal = x
-                newVal['done']='DONE'
+                newVal['done'] = 'DONE'
                 measurements[n] = newVal
         serial_connection = GlobalShared.SERIAL_CONNECTION
         if serial_connection:
             value = float(LATEST_CUT["value"]) - float(OFFSET)
             if value > -1:
-                serial_connection.write(construct_serial_message("CODE:MC " + str(value)))
-                print_label(str(LATEST_CUT["value"]))
+                serial_connection.write(
+                    construct_serial_message("CODE:MC " + str(value)))
+                if LATEST_CUT['description']:
+                    print_label_and_description(
+                        str(LATEST_CUT["value"]), str(LATEST_CUT["description"]))
+                else:
+                    print_label(str(LATEST_CUT["value"]))
             else:
                 print('Not valid input')
         else:
             print("no serial connection")
 
-   
 
 class Filechooser(BoxLayout):
     def select(self, *args):
-        try: 
+        try:
             global TEMP_FILE_PATH
             TEMP_FILE_PATH = args[1][0]
-        except: pass      
+        except:
+            pass
 
-        
+
 class OpenFilePopup(Popup):
     list_screen = ObjectProperty()
+
     def __init__(self, **kwargs):
-        super(OpenFilePopup, self).__init__(**kwargs)   
-    
+        super(OpenFilePopup, self).__init__(**kwargs)
+
     def consume_file(self):
         global FILE_PATH
         global TEMP_FILE_PATH
         FILE_PATH = TEMP_FILE_PATH
         self.list_screen.calculate_from_csv(self.list_screen)
         self.dismiss()
-    
+
     def close(self):
         self.dismiss()
