@@ -62,7 +62,7 @@ def print_label_and_description(value, description):
             fnt = ImageFont.truetype('/assets/Lato-Regular.ttf', 70)
         img = Image.new('RGB', (696, 160), color=(255, 255, 255))
         d = ImageDraw.Draw(img)
-        d.text((10, 30), value+" - "+description, font=fnt, fill=(0, 0, 0))
+        d.text((10, 30),description+ "  |  " + value, font=fnt, fill=(0, 0, 0))
         img.save(filename)
         command = "brother_ql -p usb://0x04f9:0x2042 -b pyusb --model QL-700 print -l 62 label.png"
         if on_windows():
