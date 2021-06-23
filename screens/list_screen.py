@@ -9,7 +9,6 @@ import GlobalShared
 from services import construct_serial_message, print_label, print_label_and_description, on_windows
 import csv
 import os
-import pandas as pd
 import shortuuid
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
@@ -55,19 +54,19 @@ class ListScreen(Screen):
         measurements = []
         try:
             temp_measures = []
-            df = pd.read_csv (FILE_PATH,  header=None)
-            for index, row in df.iterrows():
-                firstCol = str(row[0])
-                if 'Layout' in firstCol:
-                    pass
-                elif '#' in firstCol:
-                    pass
-                elif 'of' in firstCol:
-                    measurements.append({"id": str(shortuuid.uuid()), "value": str(row[10])+" - "+str(row[11]), 'layout': True})
-                elif 'nan' == firstCol:
-                    pass
-                else:
-                    measurements.append({"id": str(shortuuid.uuid()), "value": str(row[10]), 'description':  str(row[5]) if str(row[5])!= 'nan' else 'nan'})
+            with open(FILE_PATH) as csv_file:
+               for row in csv.reader(csv_file, delimiter=','):
+                    firstCol = str(row[0])
+                    if 'Layout' in firstCol:
+                        pass
+                    elif '#' in firstCol:
+                        pass
+                    elif 'of' in firstCol:
+                        measurements.append({"id": str(shortuuid.uuid()), "value": str(row[10])+" - "+str(row[11]), 'layout': True})
+                    elif '' == firstCol:
+                        pass
+                    else:
+                        measurements.append({"id": str(shortuuid.uuid()), "value": str(row[10]), 'description':  str(row[5]) if str(row[5])!= 'nan' else 'nan'})
 
         except Exception as e:
             print("Fail to open csv")
@@ -94,7 +93,7 @@ class RVMeasurements(RecycleView):
         return "LAYOUT: " + x["value"]
 
     def generate_text(self, x):
-        return self.generate_layout_message(x) if self.if_has_property(x, 'layout') else (self.genrate_done_message() if self.if_has_property(x, 'done') else "") + str(x["value"] + (("    |    " + str(x['description'])) if self.if_has_property(x, 'description') and str(x['description']) is not 'nan' else ""))
+        return self.generate_layout_message(x) if self.if_has_property(x, 'layout') else (self.genrate_done_message() if self.if_has_property(x, 'done') else "") + str(x["value"] + (("    |    " + str(x['description'])) if self.if_has_property(x, 'description') and str(x['description']) is not '' else ""))
 
     def generat_on_release(self, x):
         return partial(self.on_press_layout, x) if self.if_has_property(x, 'layout') else partial(self.on_press, x)
